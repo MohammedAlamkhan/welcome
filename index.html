@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to India</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #FFF3E0;
+            color: #5D4037;
         }
         .container {
             max-width: 1200px;
@@ -17,13 +19,24 @@
             padding: 20px;
         }
         h1, h2 {
-            color: #333;
+            color: #FF5722;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .section {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
         }
         .place-list {
             display: flex;
@@ -32,19 +45,39 @@
         }
         .place-item {
             width: 48%;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #FFF9C4;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .place-item:hover {
+            background-color: #FFE082;
         }
         .help-desk {
-            background-color: #e6f7ff;
-            padding: 10px;
-            border-radius: 5px;
+            background-color: #FFCCBC;
+            padding: 20px;
+            border-radius: 15px;
         }
         a {
-            color: #0066cc;
+            color: #E64A19;
             text-decoration: none;
+            transition: color 0.3s ease;
         }
         a:hover {
+            color: #FF5722;
             text-decoration: underline;
+        }
+        .intro {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .place-item {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -54,17 +87,17 @@
         
         <div class="section">
             <h2>MUMBAI</h2>
-            <p>Mumbai (formerly called Bombay) is a densely populated city on India's west coast. A financial center & India's largest city.</p>
+            <p class="intro">Mumbai (formerly called Bombay) is a densely populated city on India's west coast. A financial center & India's largest city, it's a vibrant metropolis waiting to be explored.</p>
         </div>
         
         <div class="section">
             <h2>Vibrant Metropolis</h2>
-            <p>Experience Mumbai's bustling energy. Visit the Gateway of India, explore Bollywood studios, savor street food flavors on a guided culinary tour and shop for your loved ones.</p>
+            <p class="intro">Experience Mumbai's bustling energy. Visit the Gateway of India, explore Bollywood studios, savor street food flavors on a guided culinary tour and shop for your loved ones.</p>
         </div>
         
         <div class="section">
             <h2>Culinary Delights</h2>
-            <p>Savor India's diverse cuisine.</p>
+            <p class="intro">Savor India's diverse cuisine at these handpicked restaurants:</p>
             <div class="place-list">
                 <div class="place-item"><a href="https://maps.app.goo.gl/TnFBuwoiWQHt7iL97" target="_blank">Yauatcha Mumbai (Chinese)</a></div>
                 <div class="place-item"><a href="https://maps.app.goo.gl/qHQff3yoqDX6DXxZ7" target="_blank">Bora Bora - Mixed Cuisines</a></div>
@@ -76,7 +109,8 @@
         </div>
         
         <div class="section">
-            <h2>Shopping</h2>
+            <h2>Shopping Extravaganza</h2>
+            <p class="intro">Indulge in retail therapy at these popular shopping destinations:</p>
             <div class="place-list">
                 <div class="place-item"><a href="https://maps.app.goo.gl/zmRQEYTJX4AF65xe8" target="_blank">Phoenix Palladium Mall</a></div>
                 <div class="place-item"><a href="https://maps.app.goo.gl/VcWbpS2Ni9QUPuaVA" target="_blank">Jio World Plaza</a></div>
@@ -89,6 +123,7 @@
         
         <div class="section help-desk">
             <h2>HELP DESK</h2>
+            <p class="intro">Need assistance? We're here to help!</p>
             <p>Vishal Sapkal - +91 750638989 / +91 9167627987<br>
             Email: <a href="mailto:Vishal.sapkal@mmltd.co.za">Vishal.sapkal@mmltd.co.za</a><br>
             Momentum Metropolitan Services</p>
