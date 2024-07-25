@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Marvels: Interactive Adventure!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Poppins:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #FF9933;
+            --secondary-color: #138808;
+            --tertiary-color: #000080;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        #mumbai-scene {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001F3F, #0074D9);
+        }
+
+        #mumbai-skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 40vh;
+            background: url('https://i.imgur.com/XqEFyXp.png') repeat-x;
+            background-size: auto 100%;
+            animation: moveSkyline 60s linear infinite;
+        }
+
+        @keyframes moveSkyline {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        #sun {
+            position: absolute;
+            top: 10vh;
+            left: 10vw;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #FFD700;
+            animation: sunPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes sunPulse {
+            from { transform: scale(1); box-shadow: 0 0 50px #FFD700; }
+            to { transform: scale(1.1); box-shadow: 0 0 100px #FFD700; }
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: floatCloud linear infinite;
+        }
+
+        @keyframes floatCloud {
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-100%); }
+        }
+
+        #title {
+            font-family: 'Bungee Shade', cursive;
+            font-size: 4em;
+            text-align: center;
+            color: var(--primary-color);
+            text-shadow: 3px 3px 0 var(--secondary-color), 6px 6px 0 var(--tertiary-color);
+            margin: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .info-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                var(--primary-color),
+                var(--secondary-color),
+                var(--tertiary-color),
+                var(--primary-color)
+            );
+            animation: rotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .info-card:hover::before {
+            opacity: 0.3;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(1turn); }
+        }
+
+        .info-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .info-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            margin: 5px 0;
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover li {
+            transform: translateX(10px);
+        }
+
+        #interactive-element {
+            position: absolute;
+            bottom: 40vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #interactive-element:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        #fact-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 15px;
+            border-radius: 20px;
+            max-width: 250px;
+            text-align: center;
+            font-style: italic;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #fact-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div id="mumbai-scene">
+        <div id="sun"></div>
+        <h1 id="title">Mumbai Marvels</h1>
+        <div id="mumbai-skyline"></div>
+        <img id="interactive-element" src="https://i.imgur.com/5OZ9Vxu.png" alt="Interactive Rickshaw">
+        <div id="fact-bubble"></div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Create clouds
+        function createCloud() {
+            const cloud = document.createElement('div');
+            cloud.classList.add('cloud');
+            cloud.style.top = `${Math.random() * 30}vh`;
+            cloud.style.width = `${Math.random() * 100 + 50}px`;
+            cloud.style.height = `${Math.random() * 60 + 30}px`;
+            cloud.style.animationDuration = `${Math.random() * 60 + 30}s`;
+            document.getElementById('mumbai-scene').appendChild(cloud);
+        }
+
+        for (let i = 0; i < 5; i++) {
+            createCloud();
+        }
+
+        // Info cards data
+        const infoCards = [
+            {
+                title: "🍽️ Foodie's Paradise",
+                items: ["Vada Pav", "Pav Bhaji", "Bhel Puri", "Kebabs", "Butter Chicken"]
+            },
+            {
+                title: "🛍️ Shopper's Heaven",
+                items: ["Colaba Causeway", "Linking Road", "Fashion Street", "Chor Bazaar", "Crawford Market"]
+            },
+            {
+                title: "🏛️ Must-Visit Spots",
+                items: ["Gateway of India", "Marine Drive", "Elephanta Caves", "Siddhivinayak Temple", "Chhatrapati Shivaji Terminus"]
+            },
+            {
+                title: "📞 Emergency Contacts",
+                items: ["Police: 100", "Fire: 101", "Ambulance: 102", "Tourist Helpline: 1363"]
+            }
+        ];
+
+        // Create info cards
+        infoCards.forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('info-card');
+            cardElement.innerHTML = `
+                <div class="info-card-content">
+                    <h2>${card.title}</h2>
+                    <ul>
+                        ${card.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            cardElement.style.top = `${20 + index * 20}vh`;
+            cardElement.style.right = '20px';
+            document.getElementById('mumbai-scene').appendChild(cardElement);
+
+            gsap.from(cardElement, {
+                x: 300,
+                opacity: 0,
+                duration: 1,
+                ease: 'back.out(1.7)',
+                scrollTrigger: {
+                    trigger: cardElement,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+        });
+
+        // Interactive element (Rickshaw)
+        const rickshaw = document.getElementById('interactive-element');
+        const factBubble = document.getElementById('fact-bubble');
+        const mumbaiChadFacts = [
+            "The Dabbawalas of Mumbai have a Six Sigma efficiency rating!",
+            "Mumbai's Dharavi is one of the largest slums in Asia, but also a thriving economic hub!",
+            "The Taj Mahal Palace Hotel took 21 years to build!",
+            "Mumbai's local trains carry more passengers daily than the population of many countries!",
+            "Bollywood produces more films annually than Hollywood!"
+        ];
+
+        rickshaw.addEventListener('click', () => {
+            const randomFact = mumbaiChadFacts[Math.floor(Math.random() * mumbaiChadFacts.length)];
+            factBubble.textContent = randomFact;
+            factBubble.style.opacity = 1;
+            factBubble.style.left = `${rickshaw.offsetLeft + rickshaw.offsetWidth / 2}px`;
+            factBubble.style.bottom = `${window.innerHeight - rickshaw.offsetTop + 20}px`;
+            
+            gsap.from(factBubble, {
+                y: 50,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.out(1.7)'
+            });
+
+            setTimeout(() => {
+                gsap.to(factBubble, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: 'power2.in'
+                });
+            }, 5000);
+        });
+
+        // Animate rickshaw
+        gsap.to(rickshaw, {
+            x: '+=50',
+            y: '-=20',
+            rotation: 5,
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+
+        // Title animation
+        gsap.from('#title', {
+            y: -100,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'bounce.out'
+        });
+    </script>
+</body>
+</html>

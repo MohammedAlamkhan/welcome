@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Marvels: Interactive Journey</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Poppins:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #FF9933;
+            --secondary-color: #138808;
+            --tertiary-color: #000080;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        #mumbai-scene {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001F3F, #0074D9);
+        }
+
+        #mumbai-skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 40vh;
+            background: url('https://i.imgur.com/XqEFyXp.png') repeat-x;
+            background-size: auto 100%;
+            animation: moveSkyline 60s linear infinite;
+        }
+
+        @keyframes moveSkyline {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        #title {
+            font-family: 'Bungee Shade', cursive;
+            font-size: 5em;
+            text-align: center;
+            color: var(--primary-color);
+            text-shadow: 3px 3px 0 var(--secondary-color), 6px 6px 0 var(--tertiary-color);
+            margin: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .interactive-zone {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .interactive-zone:hover {
+            transform: scale(1.1);
+        }
+
+        #fact-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 15px;
+            border-radius: 20px;
+            max-width: 250px;
+            text-align: center;
+            font-style: italic;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        #fact-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .info-panel {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            width: 22%;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .info-details {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 1000;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+
+        #traffic-light {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 150px;
+            background: #333;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .light {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            opacity: 0.3;
+            transition: opacity 0.5s;
+        }
+
+        #red { background-color: #FF0000; }
+        #yellow { background-color: #FFFF00; }
+        #green { background-color: #00FF00; }
+
+        #horn {
+            position: absolute;
+            left: 50px;
+            bottom: 50px;
+            width: 100px;
+            height: 100px;
+            background: url('https://i.imgur.com/nJbqRj5.png') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="mumbai-scene">
+        <h1 id="title">Mumbai Marvels</h1>
+        <div id="mumbai-skyline"></div>
+        <img class="interactive-zone" id="gateway" src="https://i.imgur.com/2Ypb3M3.png" alt="Gateway of India" style="left: 10%; top: 40%;">
+        <img class="interactive-zone" id="dabbawala" src="https://i.imgur.com/nS4SFex.png" alt="Dabbawala" style="right: 20%; top: 30%;">
+        <img class="interactive-zone" id="taxi" src="https://i.imgur.com/5OZ9Vxu.png" alt="Mumbai Taxi" style="left: 30%; bottom: 25%;">
+        <div id="fact-bubble"></div>
+        <div class="info-panel">
+            <div class="info-card" id="food">
+                <h2>🍽️ Food</h2>
+            </div>
+            <div class="info-card" id="places">
+                <h2>🏛️ Places</h2>
+            </div>
+            <div class="info-card" id="culture">
+                <h2>🎭 Culture</h2>
+            </div>
+            <div class="info-card" id="transport">
+                <h2>🚆 Transport</h2>
+            </div>
+        </div>
+        <div id="traffic-light">
+            <div class="light" id="red"></div>
+            <div class="light" id="yellow"></div>
+            <div class="light" id="green"></div>
+        </div>
+        <div id="horn"></div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const mumbaiChadFacts = {
+            gateway: ["The Gateway of India was built to commemorate the visit of King George V and Queen Mary to Mumbai!",
+                      "It took 4 years to complete the Gateway of India!"],
+            dabbawala: ["Mumbai's Dabbawalas deliver around 200,000 lunch boxes every day!",
+                        "The Dabbawala service has a Six Sigma efficiency rating!"],
+            taxi: ["Mumbai's iconic black and yellow taxis are called 'kaali-peeli'!",
+                   "There are over 55,000 taxis in Mumbai!"]
+        };
+
+        const infoDetails = {
+            food: ["Vada Pav - Mumbai's favorite street food",
+                   "Pav Bhaji - A spicy vegetable curry",
+                   "Bhel Puri - A crunchy, tangy snack",
+                   "Bombay Duck - Despite the name, it's actually a fish!"],
+            places: ["Marine Drive - The 'Queen's Necklace'",
+                     "Elephanta Caves - Ancient cave temples",
+                     "Chhatrapati Shivaji Terminus - A UNESCO World Heritage Site",
+                     "Juhu Beach - Famous for its street food and celebrities"],
+            culture: ["Bollywood - The Hindi film industry",
+                      "Ganesh Chaturthi - A major festival",
+                      "Cricket - Almost a religion in Mumbai",
+                      "Dabbawalas - Mumbai's unique lunch delivery system"],
+            transport: ["Local Trains - The lifeline of Mumbai",
+                        "BEST Buses - Covering every nook and corner of the city",
+                        "Auto Rickshaws - For quick, short distance travel",
+                        "Metro - The newest addition to Mumbai's transport"]
+        };
+
+        function showFact(element) {
+            const facts = mumbaiChadFacts[element.id];
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            const factBubble = document.getElementById('fact-bubble');
+            factBubble.textContent = randomFact;
+            factBubble.style.opacity = 1;
+            factBubble.style.left = `${element.offsetLeft + element.offsetWidth / 2}px`;
+            factBubble.style.top = `${element.offsetTop - 120}px`;
+            
+            gsap.from(factBubble, {
+                y: 50,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.out(1.7)'
+            });
+
+            setTimeout(() => {
+                gsap.to(factBubble, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: 'power2.in'
+                });
+            }, 5000);
+        }
+
+        document.querySelectorAll('.interactive-zone').forEach(zone => {
+            zone.addEventListener('click', () => showFact(zone));
+        });
+
+        function showInfoDetails(category) {
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'info-details';
+            detailsDiv.innerHTML = `
+                <h2>${category.charAt(0).toUpperCase() + category.slice(1)}</h2>
+                <ul>
+                    ${infoDetails[category].map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                <span class="close-btn">&times;</span>
+            `;
+            document.body.appendChild(detailsDiv);
+
+            gsap.from(detailsDiv, {
+                scale: 0.5,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.out(1.7)'
+            });
+
+            detailsDiv.querySelector('.close-btn').addEventListener('click', () => {
+                gsap.to(detailsDiv, {
+                    scale: 0.5,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: 'back.in(1.7)',
+                    onComplete: () => detailsDiv.remove()
+                });
+            });
+        }
+
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.addEventListener('click', () => showInfoDetails(card.id));
+        });
+
+        // Animate title
+        gsap.from('#title', {
+            y: -100,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'bounce.out'
+        });
+
+        // Animate interactive zones
+        gsap.from('.interactive-zone', {
+            scale: 0,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'back.out(1.7)'
+        });
+
+        // Animate info panel
+        gsap.from('.info-panel', {
+            y: 100,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        // Traffic light animation
+        function trafficLightCycle() {
+            gsap.to('#red', {opacity: 1, duration: 0.5, delay: 0});
+            gsap.to('#red', {opacity: 0.3, duration: 0.5, delay: 4});
+            gsap.to('#yellow', {opacity: 1, duration: 0.5, delay: 4});
+            gsap.to('#yellow', {opacity: 0.3, duration: 0.5, delay: 5});
+            gsap.to('#green', {opacity: 1, duration: 0.5, delay: 5});
+            gsap.to('#green', {opacity: 0.3, duration: 0.5, delay: 9});
+        }
+
+        trafficLightCycle();
+        setInterval(trafficLightCycle, 10000);
+
+        // Horn sound effect
+        const hornSound = new Audio('https://soundbible.com/mp3/Car-Horn-SoundBible.com-1229608266.mp3');
+        document.getElementById('horn').addEventListener('click', () => {
+            hornSound.play();
+            gsap.to('#horn', {scale: 1.2, duration: 0.1, yoyo: true, repeat: 1});
+        });
+    </script>
+</body>
+</html>
