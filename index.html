@@ -4,193 +4,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to India</title>
-    <style>
-        @font-face {
-            font-family: melodrama;
-            src: url(./asset/ganesha.ttf);
-        }
-
-
-        body {
-            font-family: melodrama;
-            background-image: url('./asset/image.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1,
-        h2 {
-            color: brown;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .section {
-            background-color: rgb(150 138 96);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        /* .food{
-            background-image: url('./asset/food.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        } */
-
-        .mumbai {
-            background-image: url('./asset/mumbai.gif');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        .section:hover {
-            transform: translateY(-5px);
-        }
-
-        .place-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .place-item {
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: rgba(255, 249, 196, 0.8);
-            border-radius: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .place-item:hover {
-            background-color: #FFE082;
-        }
-
-        .help-desk {
-            background-color: rgba(255, 204, 188);
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        a {
-            color: brown;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: brown;
-            text-decoration: underline;
-        }
-
-        .intro {
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .carousel {
-            width: 100%;
-            height: 400px;
-        }
-
-
-
-        @media (max-width: 768px) {
-            .place-item {
-                width: 100%;
-            }
-        }
-    </style>
+    <title>Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
-    <div class="container">
+    <header class="header">
+        <img class="logo" src="./asset/momentum.png" alt="logo">
+        <img class="logo" src="./asset/metropolitanlogo.png" alt="logo">
+        <img class="logo" style="float: right;" src="./asset/support.png" alt="support">
+    </header>
 
-
-        <div class="section ">
-            <h1>WELCOME TO INDIA</h1>
-            <iframe class="carousel" src="./gallery.html" frameborder="0"></iframe>
-        </div>
-
-
-        <div class="section">
-            <h2>MUMBAI</h2>
-            <p class="intro">Mumbai (formerly called Bombay) is a densely populated city on India's west coast. A
-                financial center & India's largest city, it's a vibrant metropolis waiting to be explored.</p>
-        </div>
-
-        <div class="section vibrant">
-            <h2>Vibrant Metropolis</h2>
-            <p class="intro">Experience Mumbai's bustling energy. Visit the Gateway of India, explore Bollywood studios,
-                savor street food flavors on a guided culinary tour and shop for your loved ones.</p>
-        </div>
-
-        <div class="section food">
-            <h2>Culinary Delights</h2>
-            <p class="intro">Savor India's diverse cuisine at these handpicked restaurants:</p>
-            <div class="place-list">
-                <div class="place-item"><a href="https://maps.app.goo.gl/TnFBuwoiWQHt7iL97" target="_blank">Yauatcha
-                        Mumbai (Chinese)</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/qHQff3yoqDX6DXxZ7" target="_blank">Bora Bora -
-                        Mixed Cuisines</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/PJbDX6ft6DYU5NS4A" target="_blank">Hurrems -
-                        Turkish</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/NQ6v5CUjJ4F6jb5b9" target="_blank">Leopold -
-                        Mixed Cuisines</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/Ed75Xa3NxJxUCQ1bA" target="_blank">Bastian - At
-                        the top - Mixed Cuisines</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/HPxSmV4P4T72uNVC7" target="_blank">Mitron -
-                        Navi Mumbai</a></div>
+    <div class="carousel-container">
+        <div class="carousel">
+            <div class="card-container">
+                <div class="card" data-link="./welcome.html">
+                    <div class="card-front">
+                        <img src="./asset/skyline.jpg" alt="Welcome">
+                        <div class="card-content">
+                            <h2 class="card-title">Welcome to Mumbai</h2>
+                            <p class="card-description">
+                                Bustling city streets,
+                                Waves kiss the ancient shoreline,
+                                Dreams rise with the sun.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <p>Dabbawalas deliver 200,000 lunchboxes daily. 📦🍱</p>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="section">
-            <h2>Shopping Extravaganza</h2>
-            <p class="intro">Indulge in retail therapy at these popular shopping destinations:</p>
-            <div class="place-list">
-                <div class="place-item"><a href="https://maps.app.goo.gl/zmRQEYTJX4AF65xe8" target="_blank">Phoenix
-                        Palladium Mall</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/VcWbpS2Ni9QUPuaVA" target="_blank">Jio World
-                        Plaza</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/KPYwpUZijdzTAGuY7" target="_blank">Nexus
-                        Seawoods - Navi Mumbai</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/8ypbcN4otx2J7t2J7" target="_blank">Bandra Hill
-                        Road</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/Mn1UMppJimoxuUZ47" target="_blank">Colaba
-                        Causeway</a></div>
-                <div class="place-item"><a href="https://maps.app.goo.gl/Ts6eYe4drQwTr5LeA" target="_blank">Linking
-                        Road</a></div>
+            <div class="card-container">
+                <div class="card" data-link="./places.html">
+                    <div class="card-front">
+                        <img src="./asset/metropolitan.png" alt="Metropolis">
+                        <div class="card-content">
+                            <h2 class="card-title">Vibrant Metropolis</h2>
+                            <p class="card-description">Vibrant metropolis,
+                                Lights and colors intertwine,
+                                Mumbai never sleeps.</p>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <p>Mumbai has a floating post office. 📮🚤</p>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="section help-desk">
-            <h2>HELP DESK</h2>
-            <p class="intro">Need assistance? We're here to help!</p>
-            <p>Vishal Sapkal - +91 750638989 / +91 9167627987<br>
-                Email: <a href="mailto:Vishal.sapkal@mmltd.co.za">Vishal.sapkal@mmltd.co.za</a><br>
-                Momentum Metropolitan Services</p>
+            <div class="card-container">
+                <div class="card" data-link="./culinary.html">
+                    <div class="card-front">
+                        <img src="./asset/vadapav.jpg" alt="Culinary">
+                        <div class="card-content">
+                            <h2 class="card-title">Culinary Delights</h2>
+                            <p class="card-description">Spices fill the air,
+                                Street stalls sizzle, flavors burst,
+                                Mumbai's feast delights.</p>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <p>Leopards roam freely in Sanjay Gandhi National Park. 🐆🌳</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <div class="card" data-link="./shopping.html">
+                    <div class="card-front">
+                        <img src="./asset/mall.png" alt=" Item 4">
+                        <div class="card-content">
+                            <h2 class="card-title">Shopping</h2>
+                            <p class="card-description">
+                                Gleaming storefronts shine,
+                                Fashion's heart in Mumbai's streets,
+                                Elegance abounds.
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <p>Antilia is the world's most expensive home. 🏠💰</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <div class="card" data-link="./streetshopping.html">
+                    <div class="card-front">
+                        <img src="./asset/streetshopping.jpg" alt=" Item 4">
+                        <div class="card-content">
+                            <h2 class="card-title">Street Shopping</h2>
+                            <p class="card-description">
+                                Bazaars hum with life,
+                                Colors, trinkets, deals to find,
+                                Mumbai's streets, a trove.
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <p>Local trains carry 7.5 million passengers daily. 🚆👥</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script src="./script.js"></script> 
 </body>
 
 </html>
