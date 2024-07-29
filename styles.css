@@ -132,3 +132,8 @@ html {
 .logo {
     height: 100%;
 }
+
+audio{
+    min-width: 300px;
+    max-width: 300px;
+}
