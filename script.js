@@ -11,6 +11,7 @@ cards.forEach(card => {
         carousel.style.overflow = 'hidden';
 
         card.classList.add('flipping');
+        card.classList.add('flipping');
 
         setTimeout(() => {
             window.location.href = link;
