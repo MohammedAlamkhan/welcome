@@ -10,8 +10,16 @@ cards.forEach(card => {
         document.body.style.overflow = 'hidden';
         carousel.style.overflow = 'hidden';
 
+        // Add flipping class to clicked card
         card.classList.add('flipping');
-        card.classList.add('flipping');
+
+        // Make other cards disappear
+        cards.forEach(otherCard => {
+            if (otherCard !== card) {
+                otherCard.style.opacity = '0';
+                otherCard.style.transition = 'opacity 0.1s ease-out';
+            }
+        });
 
         setTimeout(() => {
             window.location.href = link;
