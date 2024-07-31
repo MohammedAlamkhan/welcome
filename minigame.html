@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Tuk-Tuk Dash</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #gameContainer {
+            width: 100%;
+            height: 40%;
+            border: 1px solid #000;
+            position: relative;
+            overflow: hidden;
+            background-image: url(./asset/road.cms);
+            background-size: contain;
+            background-repeat: round;
+        }
+        #tuktuk {
+            width: 60px;
+            height: 40px;
+            background-image: url(./asset/tuk-tuk.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            animation: vibrate 0.1s infinite;
+        }
+        .obstacle {
+            width: 120px;
+            height: 30px;
+            background-image: url(./asset/sport-car.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            animation: vibrate 0.1s infinite;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+        }
+        #gameOver {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        @keyframes vibrate {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(1px, 1px); }
+            100% { transform: translate(-1px, -1px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="tuktuk"></div>
+        <div id="score">Score: 0</div>
+        <div id="gameOver">Game Over! Tap to restart</div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const tuktuk = document.getElementById('tuktuk');
+        const scoreElement = document.getElementById('score');
+        const gameOverElement = document.getElementById('gameOver');
+
+        let isJumping = false;
+        let score = 0;
+        let gameSpeed = 5;
+        let gameLoop;
+
+        function jump() {
+            if (!isJumping) {
+                isJumping = true;
+                let jumpHeight = 0;
+                const jumpInterval = setInterval(() => {
+                    if (jumpHeight >= 100) {
+                        clearInterval(jumpInterval);
+                        fall();
+                    } else {
+                        jumpHeight += 5;
+                        tuktuk.style.bottom = jumpHeight + 'px';
+                    }
+                }, 20);
+            }
+        }
+
+        function fall() {
+            const fallInterval = setInterval(() => {
+                const currentBottom = parseInt(tuktuk.style.bottom);
+                if (currentBottom <= 0) {
+                    clearInterval(fallInterval);
+                    isJumping = false;
+                    tuktuk.style.bottom = '0px';
+                } else {
+                    tuktuk.style.bottom = (currentBottom - 3) + 'px';
+                }
+            }, 20);
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+            gameContainer.appendChild(obstacle);
+
+            let obstaclePosition = gameContainer.offsetWidth;
+            const moveObstacle = setInterval(() => {
+                if (obstaclePosition < -20) {
+                    clearInterval(moveObstacle);
+                    obstacle.remove();
+                } else {
+                    obstaclePosition -= gameSpeed;
+                    obstacle.style.right = gameContainer.offsetWidth - obstaclePosition + 'px';
+
+                    if (isCollision(tuktuk, obstacle)) {
+                        gameOver();
+                    }
+                }
+            }, 20);
+
+            score++;
+            scoreElement.textContent = `Score: ${score}`;
+
+            if (score % 100 === 0) {
+                gameSpeed += 0.5;
+            }
+        }
+
+        function isCollision(a, b) {
+            const aRect = a.getBoundingClientRect();
+            const bRect = b.getBoundingClientRect();
+
+            return !(
+                aRect.top + 10 > bRect.bottom ||
+                aRect.bottom - 10 < bRect.top ||
+                aRect.right - 10 < bRect.left ||
+                aRect.left + 10 > bRect.right
+            );
+        }
+
+        function gameOver() {
+            clearInterval(gameLoop);
+            gameOverElement.style.display = 'block';
+            gameContainer.removeEventListener('touchstart', jump);
+            gameOverElement.addEventListener('touchstart', restartGame);
+        }
+
+        function restartGame() {
+            score = 0;
+            gameSpeed = 5;
+            scoreElement.textContent = 'Score: 0';
+            gameOverElement.style.display = 'none';
+            gameOverElement.removeEventListener('touchstart', restartGame);
+            gameContainer.addEventListener('touchstart', jump);
+            startGame();
+        }
+
+        function startGame() {
+            gameLoop = setInterval(createObstacle, 2000);
+        }
+
+        gameContainer.addEventListener('touchstart', jump);
+        startGame();
+    </script>
+</body>
+</html>
