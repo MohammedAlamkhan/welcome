@@ -1,4 +1,4 @@
-const CACHE_NAME = 'your-app-cache-v1';
+const CACHE_NAME = 'welcome-cache-v1';
 const urlsToCache = [
   '/welcome/',
   '/welcome/index.html',
@@ -23,20 +23,6 @@ const urlsToCache = [
   '/welcome/culinary/leopold.html',
   '/welcome/culinary/mitron.html',
   '/welcome/culinary/yauatcha.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
-  '/welcome/offline.html',
   '/welcome/offline.html',
 ];
 
