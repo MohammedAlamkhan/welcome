@@ -33,7 +33,7 @@ self.addEventListener('install', (event) => {
           .then(() => {
             return cache.addAll([
               // Cache asset folder
-              '/welcome/assets/',
+              '/welcome/asset/',
               // Cache sounds folder
               '/welcome/sounds/'
             ]);

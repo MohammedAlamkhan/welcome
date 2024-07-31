@@ -247,6 +247,21 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const audioElements = document.querySelectorAll('audio');
+            let currentlyPlaying = null;
+
+            audioElements.forEach(audio => {
+                audio.addEventListener('play', function () {
+                    if (currentlyPlaying && currentlyPlaying !== this) {
+                        currentlyPlaying.pause();
+                    }
+                    currentlyPlaying = this;
+                });
+            });
+        });
+    </script>
     <script src="./script.js"></script>
 </body>
 
