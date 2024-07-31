@@ -23,7 +23,6 @@ const urlsToCache = [
   '/welcome/culinary/leopold.html',
   '/welcome/culinary/mitron.html',
   '/welcome/culinary/yauatcha.html',
-  '/welcome/offline.html',
 ];
 
 self.addEventListener('install', (event) => {
