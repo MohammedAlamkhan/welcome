@@ -1,7 +1,7 @@
 {
   "name": "Mumbai Guide",
   "short_name": "Mumbai",
-  "start_url": "./welcome/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
