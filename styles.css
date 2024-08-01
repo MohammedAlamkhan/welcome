@@ -149,12 +149,14 @@ html {
     font-weight: 700;
     margin-bottom: 20px;
     color: #3c366b;
+    transform: rotateY(-10deg);
 }
 
 .card-description {
     font-size: 18px;
     line-height: 1.6;
     color: #718096;
+    transform: rotateY(-10deg);
 }
 
 .header {
