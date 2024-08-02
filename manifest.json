@@ -7,22 +7,22 @@
   "theme_color": "#000000",
   "screenshots": [
     {
-      "src": "./ss1.png",
-      "sizes": "650x1300",
+      "src": "./s1.jpg",
+      "sizes": "738x1600",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Home"
     },
     {
-      "src": "./ss2.png",
-      "sizes": "650x1300",
+      "src": "./s2.jpg",
+      "sizes": "738x1600",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Sounds"
     },
     {
-      "src": "./ss3.png",
-      "sizes": "650x1300",
+      "src": "./s3.jpg",
+      "sizes": "738x1600",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Details"
@@ -38,6 +38,28 @@
       "src": "icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Restaurants",
+      "url": "./culinary.html"
+    },
+    {
+      "name": "Street Shopping",
+      "url": "./streetshopping.html"
+    },
+    {
+      "name": "Shopping",
+      "url": "./shopping.html"
+    },
+    {
+      "name": "Weekend Getaways",
+      "url": "./weekendtrip.html"
+    },
+    {
+      "name": "Tourist Destinations",
+      "url": "./places.html"
     }
   ]
 }
