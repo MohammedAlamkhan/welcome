@@ -7,37 +7,37 @@
   "theme_color": "#000000",
   "screenshots": [
     {
-      "src": "./s1.avif",
+      "src": "./s1.png",
       "sizes": "738x1600",
-      "type": "image/avif",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Home"
     },
     {
-      "src": "./s2.avif",
+      "src": "./s2.png",
       "sizes": "738x1600",
-      "type": "image/avif",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Sounds"
     },
     {
-      "src": "./s3.avif",
+      "src": "./s3.png",
       "sizes": "738x1600",
-      "type": "image/avif",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Details"
     }
   ],
   "icons": [
     {
-      "src": "icon-192x192.avif",
+      "src": "icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/avif"
+      "type": "image/png"
     },
     {
-      "src": "icon-512x512.avif",
+      "src": "icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/avif"
+      "type": "image/png"
     }
   ],
   "shortcuts": [
