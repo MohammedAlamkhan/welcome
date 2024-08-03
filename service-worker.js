@@ -24,11 +24,7 @@ const urlsToCache = [
   '/welcome/culinary/hurrems.html',
   '/welcome/culinary/leopold.html',
   '/welcome/culinary/mitron.html',
-  '/welcome/culinary/yauatcha.html',
-  '/welcome/splash.avif',
-  '/welcome/asset/gateway.avif',
-  '/welcome/asset/muesuem.avif',
-  '/welcome/asset/chaupati.avif',
+  '/welcome/culinary/yauatcha.html'
 ];
 
 self.addEventListener('install', (event) => {
