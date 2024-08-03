@@ -14,40 +14,6 @@ html {
 }
 
 
-#lockscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    transition: transform 0.3s ease-out;
-}
-
-#lockscreen img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-#content {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    background-color: #fff;
-    transition: transform 0.3s ease-out;
-}
-
-.unlocked #lockscreen {
-    transform: translateY(-100%);
-}
-
-.unlocked #content {
-    transform: translateY(-100%);
-}
 
 
 .carousel-container {

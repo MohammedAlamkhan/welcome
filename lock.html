@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Welcome</title>
+    <style>
+        #lockscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            transition: transform 0.3s ease-out;
+        }
+
+        #lockscreen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #fff;
+            transition: transform 0.3s ease-out;
+        }
+
+        .unlocked #lockscreen {
+            transform: translateY(-100%);
+        }
+
+        .unlocked #content {
+            transform: translateY(-100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="lockscreen">
+        <img src="./asset/splash.avif" alt="Lockscreen Image">
+    </div>
+    <script>
+        let lastActivity = Date.now();
+        let isLocked = true;
+
+        function showLockscreen() {
+            document.body.classList.remove('unlocked');
+            isLocked = true;
+        }
+
+        function hideLockscreen() {
+            document.body.classList.add('unlocked');
+            isLocked = false;
+            // Redirect to index.html after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 300); // 300ms delay to allow for the transition animation
+        }
+
+        function handleUnlock(e) {
+            if (isLocked) {
+                hideLockscreen();
+                e.preventDefault(); // Prevent default action
+            }
+        }
+
+        // Add click event listener for desktop users
+        document.addEventListener('click', handleUnlock);
+
+        // Touch event for mobile users
+        document.addEventListener('touchstart', function (e) {
+            if (isLocked) {
+                let startY = e.touches[0].clientY;
+
+                document.addEventListener('touchmove', function moveHandler(e) {
+                    let currentY = e.touches[0].clientY;
+                    if (currentY < startY - 100) {
+                        hideLockscreen();
+                        document.removeEventListener('touchmove', moveHandler);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
