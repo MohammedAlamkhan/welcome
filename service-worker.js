@@ -6,8 +6,8 @@ const urlsToCache = [
   '/welcome/details.css',
   '/welcome/script.js',
   '/welcome/support.html',
-  '/welcome/icon-192x192.png',
-  '/welcome/icon-512x512.png',
+  '/welcome/icon-192x192.avif',
+  '/welcome/icon-512x512.avif',
   '/welcome/offline.html',
   '/welcome/welcome.html',
   '/welcome/weekendtrip.html',
@@ -25,6 +25,10 @@ const urlsToCache = [
   '/welcome/culinary/leopold.html',
   '/welcome/culinary/mitron.html',
   '/welcome/culinary/yauatcha.html',
+  '/welcome/splash.avif',
+  '/welcome/asset/gateway.avif',
+  '/welcome/asset/muesuem.avif',
+  '/welcome/asset/chaupati.avif',
 ];
 
 self.addEventListener('install', (event) => {
