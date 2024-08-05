@@ -6,47 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
     <title>Welcome</title>
-    <style>
-        #lockscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            transition: transform 0.3s ease-out;
-        }
+  <style>
+     #lockscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        transition: transform 0.3s ease-out;
+        overflow: hidden;
+    }
 
-        #lockscreen img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    #bgVideo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transform: translate(-50%, -50%);
+    }
 
-        #content {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            background-color: #fff;
-            transition: transform 0.3s ease-out;
-        }
+    #content {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        background-color: #fff;
+        transition: transform 0.3s ease-out;
+    }
 
-        .unlocked #lockscreen {
-            transform: translateY(-100%);
-        }
+    .unlocked #lockscreen {
+        transform: translateY(-100%);
+    }
 
-        .unlocked #content {
-            transform: translateY(-100%);
-        }
-    </style>
+    .unlocked #content {
+        transform: translateY(-100%);
+    }
+</style>
 </head>
 
 <body>
     <div id="lockscreen">
-        <img src="./asset/splash.avif" alt="Lockscreen Image">
+        <video id="bgVideo" autoplay loop muted playsinline>
+            <source src="./asset/mumbai.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
     <script>
         let lastActivity = Date.now();
