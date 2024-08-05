@@ -34,13 +34,14 @@ html {
 
 .carousel {
     display: flex;
-    padding: 0 10vw;
+    padding: 0 5vw;
+    padding-bottom: 20%;
 }
 
 .card-container {
     perspective: 1000px;
     width: 80vw;
-    height: 80vh;
+    height: 70vh;
     margin-right: 5vw;
     scroll-snap-align: center;
     position: relative;
@@ -49,7 +50,7 @@ html {
 .card {
     position: absolute;
     width: 100%;
-    height: 90%;
+    height: 100%;
     transition:
         transform 1s ease-in-out,
         width 1s ease-in-out,
@@ -207,6 +208,77 @@ audio {
     color: #4a5568;
 }
 
+.bird {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    width: 100%;
+    height: 80px; /* Adjusted for better proportion */
+    z-index: 999;
+    background-image: url(./asset/birds.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left bottom;
+}
+
+.speech-bubble {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 15px;
+    max-width: 250px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    bottom: 100%;
+    left: 130px; /* Adjust based on your bird image */
+    transform: translateY(-10px);
+    bottom: 0px;
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px; /* Position on the left side */
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0; /* Adjust border to point left */
+    border-style: solid;
+    border-color: transparent #fff transparent transparent;
+}
+
+.speech-bubble p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bird {
+        bottom: 50px;
+        height: 70px;
+    }
+    .speech-bubble {
+        max-width: 200px;
+        left: 110px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bird {
+        bottom: 40px;
+        height: 60px;
+    }
+    .speech-bubble {
+        max-width: 180px;
+        left: 110px;
+        padding: 10px;
+    }
+    .speech-bubble p {
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 768px) {
     .footer {
         height: 50px;
@@ -245,4 +317,17 @@ audio {
         max-width: 200px;
     }
 
+}
+
+@media (min-width: 1008px) {
+    .carousel-container {
+        height: 90vw;
+    }
+}
+
+
+@media (min-width: 1208px) {
+    .carousel-container {
+        height: 70vw;
+    }
 }
