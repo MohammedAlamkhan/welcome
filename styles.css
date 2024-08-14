@@ -1,20 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
-/* Rest of your CSS styles go here */
+:root {
+    --bg-color: #f0f4f8;
+    --text-color: #4a5568;
+    --card-bg: #ffffff;
+    --title-color: #3c366b;
+    --description-color: #718096;
+    --footer-bg: #ffffff;
+    --footer-icon-color: #3c366b;
+    --header-color: #f0f4f8;
+    --card-shadow: rgb(0 0 0 / 70%);
+}
+
+.dark-mode {
+    --bg-color: #002952;
+    --text-color: #dfefff;
+    --card-bg: #35587b;
+    --title-color: #dfefff;
+    --description-color: #718096;
+    --footer-bg: #35587b;
+    --footer-icon-color: #dfefff;
+    --header-color: #002952;
+    --card-shadow: rgb(0 0 0 / 70%);
+}
+
 body,
 html {
     font-family: 'Lato', sans-serif;
-    background-color: #f0f4f8;
-    color: #4a5568;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
 }
-
-
-
 
 .carousel-container {
     width: 100vw;
@@ -58,7 +78,6 @@ html {
         left 0.8s ease-in-out,
         top 0.8s ease-in-out;
     transform: rotateY(-10deg);
-    /* Apply the desired rotation */
     transform-style: preserve-3d;
     cursor: pointer;
     z-index: 10;
@@ -75,12 +94,10 @@ html {
         left 0.8s ease-in-out,
         top 0.8s ease-in-out;
     transform: rotateY(-10deg);
-    /* Apply the desired rotation */
     transform-style: preserve-3d;
     cursor: pointer;
     z-index: 10;
 }
-
 
 .card-front,
 .card-back {
@@ -91,24 +108,23 @@ html {
     backface-visibility: hidden;
     border-radius: 30px;
     overflow: hidden;
-    box-shadow: 27px 26px 68px rgb(0 0 0 / 70%);
+    box-shadow: 27px 26px 68px var(--card-shadow);
     transition: border-radius 0.8s;
+    background-color: var(--card-bg);
 }
 
 .card-front {
-    background-color: #ffffff;
     display: flex;
     flex-direction: column;
 }
 
 .card-back {
-    background-color: #ffffff;
     transform: rotateY(180deg);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    color: #3c366b;
+    color: var(--title-color);
     font-family: 'Playfair Display', serif;
 }
 
@@ -120,24 +136,16 @@ html {
 
 .card.flipping .card-front,
 .card.flipping .card-back {
-    border-radius: 30;
-
+    border-radius: 30px;
 }
 
-.card img {
-    width: 100%;
-    min-height: 60%;
-    max-height: 60%;
-    object-fit: cover;
-}
-
+.card img,
 .end-card img {
     width: 100%;
     min-height: 60%;
     max-height: 60%;
     object-fit: cover;
 }
-
 
 .card-content {
     padding: 30px;
@@ -152,28 +160,26 @@ html {
     font-size: 36px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #3c366b;
+    color: var(--title-color);
     transform: rotateY(-10deg);
 }
 
 .card-description {
     font-size: 18px;
     line-height: 1.6;
-    color: #718096;
+    color: var(--description-color);
     transform: rotateY(-10deg);
 }
 
 .header {
     position: absolute;
     width: 100%;
-    height: 200px;
     height: 5%;
 }
 
-.header a{
-    color:#f0f4f8 ;
+.header a {
+    color: var(--header-color);
 }
-
 
 .logo {
     height: 100%;
@@ -190,7 +196,7 @@ audio {
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--footer-bg);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -199,13 +205,13 @@ audio {
 
 .footer-icon {
     font-size: 24px;
-    color: #3c366b;
+    color: var(--footer-icon-color);
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .footer-icon:hover {
-    color: #4a5568;
+    color: var(--text-color);
 }
 
 .bird {
@@ -223,7 +229,7 @@ audio {
 
 .speech-bubble {
     position: absolute;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-radius: 20px;
     padding: 15px;
     max-width: 250px;
@@ -242,14 +248,26 @@ audio {
     transform: translateY(-50%);
     border-width: 10px 10px 10px 0; 
     border-style: solid;
-    border-color: transparent #fff transparent transparent;
+    border-color: transparent var(--card-bg) transparent transparent;
 }
 
 .speech-bubble p {
     margin: 0;
     font-size: 14px;
     line-height: 1.4;
-    color: #333;
+    color: var(--text-color);
+}
+
+.dark-mode-toggle {
+    position: relative;
+    float: inline-end;
+    top: 7px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    color: var(--text-color);
+    cursor: pointer;
+    z-index: 1001;
 }
 
 /* Responsive adjustments */
@@ -261,6 +279,16 @@ audio {
     .speech-bubble {
         max-width: 200px;
         left: 110px;
+    }
+    .footer {
+        height: 50px;
+    }
+    .footer-icon {
+        font-size: 20px;
+    }
+    audio {
+        min-width: 280px;
+        max-width: 280px;
     }
 }
 
@@ -277,46 +305,22 @@ audio {
     .speech-bubble p {
         font-size: 12px;
     }
-}
-
-@media (max-width: 768px) {
-    .footer {
-        height: 50px;
-    }
-
-    .footer-icon {
-        font-size: 20px;
-    }
-
-    audio {
-        min-width: 280px;
-        max-width: 280px;
-    }
-}
-
-@media (max-width: 480px) {
     .footer {
         height: 40px;
     }
-
     .footer-icon {
         font-size: 18px;
     }
-
     .card-description {
         display: none;
     }
-
-
     .card-content {
         padding: 10px;
     }
-
     audio {
         min-width: 200px;
         max-width: 200px;
     }
-
 }
 
 @media (min-width: 1008px) {
@@ -324,7 +328,6 @@ audio {
         height: 90vw;
     }
 }
-
 
 @media (min-width: 1208px) {
     .carousel-container {

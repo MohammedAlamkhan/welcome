@@ -72,3 +72,27 @@ setInterval(changeFact, 10000);
 
 // Initial fact change
 changeFact();
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+  
+    // Check for saved theme preference or use default
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme) {
+      body.classList.add(currentTheme);
+    }
+  
+    // Toggle dark mode
+    darkModeToggle.addEventListener('click', () => {
+      if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('theme', '');
+        darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      } else {
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark-mode');
+        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+    });
+  });

@@ -1,5 +1,29 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
+
+:root {
+    --bg-color: #f0f4f8;
+    --text-color: #4a5568;
+    --card-bg: #ffffff;
+    --title-color: #3c366b;
+    --description-color: #718096;
+    --footer-bg: #ffffff;
+    --footer-icon-color: #3c366b;
+    --header-color: #f0f4f8;
+    --card-shadow: rgb(0 0 0 / 70%);
+}
+
+.dark-mode {
+    --bg-color: #002952;
+    --text-color: #dfefff;
+    --card-bg: #35587b;
+    --title-color: #dfefff;
+    --description-color: #718096;
+    --footer-bg: #35587b;
+    --footer-icon-color: #dfefff;
+    --header-color: #002952;
+    --card-shadow: rgb(0 0 0 / 70%);
+}
 html, body {
     height: 100%;
     margin: 0;
@@ -8,13 +32,12 @@ html, body {
 
 body {
     font-family: 'Lato', sans-serif;
-    background-color: #f0f4f8;
-    color: #4a5568;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     height: 100%;
 }
-
 
 .header {
     position: absolute;
@@ -26,7 +49,7 @@ body {
 }
 
 .header a{
-    color:#f0f4f8 ;
+    color: var(--header-color);
 }
 
 .logo {
@@ -68,14 +91,13 @@ body {
     border: none;
 }
 
-
 .footer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--footer-bg);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -84,13 +106,13 @@ body {
 
 .footer-icon {
     font-size: 24px;
-    color: #3c366b;
+    color: var(--footer-icon-color);
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .footer-icon:hover {
-    color: #4a5568;
+    color: var(--text-color);
 }
 
 @media (max-width: 768px) {
@@ -111,5 +133,4 @@ body {
     .footer-icon {
         font-size: 18px;
     }
-
 }
