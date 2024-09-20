@@ -62,7 +62,7 @@ const urlsToCache = [
   "/welcome/asset/metropolitan.avif",
   "/welcome/asset/metropolitanlogo.avif",
   "/welcome/asset/mitron.avif",
-  "/welcome/asset/momentum.avif",
+  "/welcome/asset/momentum.png",
   "/welcome/asset/muesuem.avif",
   "/welcome/asset/mumbai.mp4",
   "/welcome/asset/mumbailocal.avif",
