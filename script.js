@@ -72,3 +72,37 @@ setInterval(changeFact, 10000);
 
 // Initial fact change
 changeFact();
+
+// Idle timeout functionality
+let timeoutId;
+const idleTime = 60000; // 1 minute in milliseconds
+
+function startTimer() {
+    // Clear any existing timer
+    clearTimeout(timeoutId);
+    // Start a new timer
+    timeoutId = setTimeout(goToLockScreen, idleTime);
+}
+
+function resetTimer() {
+    startTimer();
+}
+
+function goToLockScreen() {
+    // Redirect to the lock screen page
+    window.location.href = "/lock.html";
+}
+
+// Add event listeners to reset the timer on user activity
+document.addEventListener("mousemove", resetTimer);
+document.addEventListener("keydown", resetTimer);
+document.addEventListener("scroll", resetTimer);
+document.addEventListener("click", resetTimer);
+// Add touch event listeners for touchscreen support
+document.addEventListener("touchstart", resetTimer);
+document.addEventListener("touchend", resetTimer);
+document.addEventListener("touchmove", resetTimer);
+
+
+// Start the timer when the page loads
+startTimer();
