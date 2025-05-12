@@ -15,18 +15,121 @@ body {
     height: 100%;
 }
 
-
 .header {
-    position: absolute;
-    width: 90%;
-    left: 20px;
-    right: 20px;
-    height: 200px;
-    height: 5%;
+    display: flex;
+    align-items: center; /* Vertically aligns items in the center */
+    justify-content: space-between; /* Puts space between the logo, nav, and support icon */
+    width: 100%;
+    padding: 10px 20px; /* Add padding for vertical spacing and internal horizontal space */
+    box-sizing: border-box; /* Include padding in the element's total width */
+    background-color: #f0f4f8; /* Or your desired header background */
+    position: relative; /* Changed from absolute for better layout flow */
+    height: auto; /* Allow height to be determined by content and padding */
+    z-index: 1000; /* Ensure header is above other content */
 }
 
-.header a{
-    color:#f0f4f8 ;
+.header .logo {
+    height: 40px; /* Adjust logo size */
+    /* Remove float: left/right if present */
+}
+
+/* Style for the support icon */
+.header .support-logo {
+    height: 40px; /* Adjust support icon size to match logo */
+}
+
+
+.header nav {
+    flex-grow: 1; /* Allows the nav to take up the available space between logo and support */
+    margin: 0 20px; /* Provides some space between the nav and the logos */
+    overflow: hidden; /* Hide overflowing breadcrumbs if they get too long */
+    white-space: nowrap; /* Prevent breadcrumb items from wrapping */
+}
+
+.breadcrumb {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex; /* Arrange list items in a row */
+    align-items: center; /* Vertically align list items */
+}
+
+.breadcrumb li {
+    display: inline-block; /* Keep inline-block for the current arrow styling */
+    position: relative;
+    /* Adjust spacing */
+    padding: 0 8px; /* Reduced horizontal padding */
+    margin: 0 -4px; /* Reduced negative margin */
+    line-height: normal;
+    white-space: nowrap; /* Prevent text wrapping within list items */
+}
+
+.breadcrumb li:first-child {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.breadcrumb li:last-child {
+    margin-right: 0;
+    padding-right: 0;
+}
+
+
+.breadcrumb li::before,
+.breadcrumb li::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 50%;
+    width: 100%;
+    background: white; /* Ensure background matches list item background */
+    border-left: 2px solid #666;
+    border-right: 2px solid #666;
+    z-index: -2;
+}
+
+.breadcrumb li::before {
+    top: -2px;
+    transform: skew(30deg);
+    border-top: 2px solid #666;
+}
+
+.breadcrumb li::after {
+    bottom: -2px;
+    transform: skew(-30deg);
+    border-bottom: 2px solid #666;
+}
+
+.breadcrumb li:last-child::before,
+.breadcrumb li:last-child::after {
+    background: #ffffc0;
+}
+
+.breadcrumb li:not(:last-child):hover::before,
+.breadcrumb li:not(:last-child):hover::after {
+    background: lightsalmon;
+}
+
+
+.breadcrumb a {
+    display: inline-block;
+    position: relative;
+    line-height: 2;
+    padding: 0 8px; /* Reduced padding */
+    color: #666;
+    text-decoration: none;
+}
+
+.breadcrumb li:first-child {
+    background-color: white;
+    border-left: 2px solid #666;
+    left: -4px; /* Adjusted left shift */
+    box-sizing: content-box;
+    padding-left: 12px; /* Adjusted padding to account for shift */
+}
+
+.breadcrumb li:first-child:hover {
+    background-color: lightsalmon;
 }
 
 .logo {

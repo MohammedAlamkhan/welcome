@@ -10,10 +10,126 @@ html {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll on body */
 }
 
 
+.header {
+    display: flex;
+    align-items: center; /* Vertically aligns items in the center */
+    justify-content: space-between; /* Puts space between the logo, nav, and support icon */
+    width: 100%;
+    padding: 10px 20px; /* Add padding for vertical spacing and internal horizontal space */
+    box-sizing: border-box; /* Include padding in the element's total width */
+    background-color: #f0f4f8; /* Or your desired header background */
+    position: relative; /* Changed from absolute for better layout flow */
+    height: auto; /* Allow height to be determined by content and padding */
+    z-index: 1000; /* Ensure header is above other content */
+}
+
+.header .logo {
+    height: 40px; /* Adjust logo size */
+    /* Remove float: left/right if present */
+}
+
+/* Style for the support icon */
+.header .support-logo {
+    height: 40px; /* Adjust support icon size to match logo */
+}
+
+
+.header nav {
+    flex-grow: 1; /* Allows the nav to take up the available space between logo and support */
+    margin: 0 20px; /* Provides some space between the nav and the logos */
+    overflow: hidden; /* Hide overflowing breadcrumbs if they get too long */
+    white-space: nowrap; /* Prevent breadcrumb items from wrapping */
+}
+
+.breadcrumb {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex; /* Arrange list items in a row */
+    align-items: center; /* Vertically align list items */
+}
+
+.breadcrumb li {
+    display: inline-block; /* Keep inline-block for the current arrow styling */
+    position: relative;
+    /* Adjust spacing */
+    padding: 0 8px; /* Reduced horizontal padding */
+    margin: 0 -4px; /* Reduced negative margin */
+    line-height: normal;
+    white-space: nowrap; /* Prevent text wrapping within list items */
+}
+
+.breadcrumb li:first-child {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.breadcrumb li:last-child {
+    margin-right: 0;
+    padding-right: 0;
+}
+
+
+.breadcrumb li::before,
+.breadcrumb li::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 50%;
+    width: 100%;
+    background: white; /* Ensure background matches list item background */
+    border-left: 2px solid #666;
+    border-right: 2px solid #666;
+    z-index: -2;
+}
+
+.breadcrumb li::before {
+    top: -2px;
+    transform: skew(30deg);
+    border-top: 2px solid #666;
+}
+
+.breadcrumb li::after {
+    bottom: -2px;
+    transform: skew(-30deg);
+    border-bottom: 2px solid #666;
+}
+
+.breadcrumb li:last-child::before,
+.breadcrumb li:last-child::after {
+    background: #ffffc0;
+}
+
+.breadcrumb li:not(:last-child):hover::before,
+.breadcrumb li:not(:last-child):hover::after {
+    background: lightsalmon;
+}
+
+
+.breadcrumb a {
+    display: inline-block;
+    position: relative;
+    line-height: 2;
+    padding: 0 8px; /* Reduced padding */
+    color: #666;
+    text-decoration: none;
+}
+
+.breadcrumb li:first-child {
+    background-color: white;
+    border-left: 2px solid #666;
+    left: -4px; /* Adjusted left shift */
+    box-sizing: content-box;
+    padding-left: 12px; /* Adjusted padding to account for shift */
+}
+
+.breadcrumb li:first-child:hover {
+    background-color: lightsalmon;
+}
 
 
 .carousel-container {
@@ -26,6 +142,8 @@ html {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    padding-top: 60px; /* Add padding to prevent content from being hidden by the header */
+    box-sizing: border-box;
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -163,21 +281,6 @@ html {
     transform: rotateY(-10deg);
 }
 
-.header {
-    position: absolute;
-    width: 100%;
-    height: 200px;
-    height: 5%;
-}
-
-.header a{
-    color:#f0f4f8 ;
-}
-
-
-.logo {
-    height: 100%;
-}
 
 audio {
     min-width: 300px;
@@ -229,7 +332,7 @@ audio {
     max-width: 250px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     bottom: 100%;
-    left: 130px; 
+    left: 130px;
     transform: translateY(-10px);
     bottom: 0px;
 }
@@ -238,9 +341,9 @@ audio {
     content: '';
     position: absolute;
     top: 50%;
-    left: -10px; 
+    left: -10px;
     transform: translateY(-50%);
-    border-width: 10px 10px 10px 0; 
+    border-width: 10px 10px 10px 0;
     border-style: solid;
     border-color: transparent #fff transparent transparent;
 }
@@ -262,6 +365,38 @@ audio {
         max-width: 200px;
         left: 110px;
     }
+
+    .breadcrumb li {
+        padding: 0 5px; /* Further reduce padding on smaller screens */
+        margin: 0 -3px; /* Further reduce negative margin */
+    }
+
+    .breadcrumb a {
+        padding: 0 5px; /* Further reduce padding */
+    }
+
+    .breadcrumb li:first-child {
+         padding-left: 8px; /* Adjust padding */
+         left: -3px; /* Adjusted left shift */
+    }
+
+    .header nav {
+        margin: 0 10px; /* Reduce margin around nav */
+    }
+
+    .header .logo {
+        height: 35px; /* Adjust logo size */
+    }
+
+    .header .support-logo {
+        height: 35px; /* Adjust support logo size */
+    }
+
+     .carousel-container {
+        padding-top: 50px; /* Adjust padding for smaller header */
+    }
+
+
 }
 
 @media (max-width: 480px) {
@@ -277,24 +412,7 @@ audio {
     .speech-bubble p {
         font-size: 12px;
     }
-}
 
-@media (max-width: 768px) {
-    .footer {
-        height: 50px;
-    }
-
-    .footer-icon {
-        font-size: 20px;
-    }
-
-    audio {
-        min-width: 280px;
-        max-width: 280px;
-    }
-}
-
-@media (max-width: 480px) {
     .footer {
         height: 40px;
     }
@@ -317,6 +435,37 @@ audio {
         max-width: 200px;
     }
 
+    .header .logo {
+        height: 30px; /* Adjust logo size */
+    }
+
+    .header .support-logo {
+        height: 30px; /* Adjust support logo size */
+    }
+
+    .header nav {
+        margin: 0 5px; /* Further reduce margin around nav */
+    }
+
+    .breadcrumb li {
+        padding: 0 3px; /* Further reduce padding on smaller screens */
+        margin: 0 -2px; /* Further reduce negative margin */
+    }
+
+    .breadcrumb a {
+        padding: 0 3px; /* Further reduce padding */
+        font-size: 12px; /* Reduce font size */
+    }
+
+     .breadcrumb li:first-child {
+         padding-left: 6px; /* Adjust padding */
+         left: -2px; /* Adjusted left shift */
+    }
+
+     .carousel-container {
+        padding-top: 45px; /* Adjust padding for smaller header */
+    }
+
 }
 
 @media (min-width: 1008px) {
@@ -330,4 +479,23 @@ audio {
     .carousel-container {
         height: 70vw;
     }
+}
+
+
+.title-definiton {
+	width: 500px;
+	margin-bottom: 30px;
+}
+
+.c-btn {
+  text-decoration: none;
+  padding: 0 18px;
+  border: 2px solid #666;
+	border-radius: 5px;
+	color: #666;
+	transition: all 0.3s ease-in-out;
+
+	&:hover {
+		background-color: lightsalmon;
+	}
 }
