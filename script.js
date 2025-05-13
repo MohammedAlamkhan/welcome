@@ -90,7 +90,7 @@ function resetTimer() {
 
 function goToLockScreen() {
     // Redirect to the lock screen page
-    window.location.href = "/lock.html";
+    window.location.href = "/welcome/lock.html";
 }
 
 // Add event listeners to reset the timer on user activity
