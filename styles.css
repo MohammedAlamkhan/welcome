@@ -134,9 +134,7 @@ html {
 
 .carousel-container {
     width: 100vw;
-    height: 100vh;
     display: flex;
-    align-items: center;
     overflow-x: scroll;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;

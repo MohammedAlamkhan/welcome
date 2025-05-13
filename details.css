@@ -1,4 +1,6 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+/* Add this import if you use Lato and Playfair Display fonts in your detail page content */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap');
 
 html, body {
     height: 100%;
@@ -13,8 +15,11 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    /* Add this from style.css if you don't want horizontal scroll on the body */
+    /* overflow-x: hidden; */
 }
 
+/* --- Harmonized Header Styles (Matching style.css) --- */
 .header {
     display: flex;
     align-items: center; /* Vertically aligns items in the center */
@@ -22,23 +27,19 @@ body {
     width: 100%;
     padding: 10px 20px; /* Add padding for vertical spacing and internal horizontal space */
     box-sizing: border-box; /* Include padding in the element's total width */
-    background-color: #f0f4f8; /* Or your desired header background */
-    position: relative; /* Changed from absolute for better layout flow */
+    background-color: #f0f4f8; /* Keep background consistent */
+    position: relative;
     height: auto; /* Allow height to be determined by content and padding */
     z-index: 1000; /* Ensure header is above other content */
 }
 
-.header .logo {
-    height: 40px; /* Adjust logo size */
-    /* Remove float: left/right if present */
-}
-
-/* Style for the support icon */
+/* Default Logo and Support Logo Height (matching style.css base) */
+.header .logo,
 .header .support-logo {
-    height: 40px; /* Adjust support icon size to match logo */
+    height: 40px; /* Base height for logos */
 }
 
-
+/* Nav styles (identical in both) */
 .header nav {
     flex-grow: 1; /* Allows the nav to take up the available space between logo and support */
     margin: 0 20px; /* Provides some space between the nav and the logos */
@@ -46,6 +47,7 @@ body {
     white-space: nowrap; /* Prevent breadcrumb items from wrapping */
 }
 
+/* Breadcrumb styles (identical in both) */
 .breadcrumb {
     list-style-type: none;
     padding: 0;
@@ -67,13 +69,17 @@ body {
 .breadcrumb li:first-child {
     margin-left: 0;
     padding-left: 0;
+    background-color: white; /* Ensure background matches list item background */
+    border-left: 2px solid #666;
+    left: -4px; /* Adjusted left shift */
+    box-sizing: content-box;
+    padding-left: 12px; /* Adjusted padding to account for shift */
 }
 
 .breadcrumb li:last-child {
     margin-right: 0;
     padding-right: 0;
 }
-
 
 .breadcrumb li::before,
 .breadcrumb li::after{
@@ -88,6 +94,11 @@ body {
     z-index: -2;
 }
 
+.breadcrumb li:last-child::before,
+.breadcrumb li:last-child::after {
+    background: #ffffc0;
+}
+
 .breadcrumb li::before {
     top: -2px;
     transform: skew(30deg);
@@ -100,14 +111,13 @@ body {
     border-bottom: 2px solid #666;
 }
 
-.breadcrumb li:last-child::before,
-.breadcrumb li:last-child::after {
-    background: #ffffc0;
-}
-
 .breadcrumb li:not(:last-child):hover::before,
 .breadcrumb li:not(:last-child):hover::after {
     background: lightsalmon;
+}
+
+.breadcrumb li:first-child:hover {
+    background-color: lightsalmon;
 }
 
 
@@ -120,22 +130,59 @@ body {
     text-decoration: none;
 }
 
-.breadcrumb li:first-child {
-    background-color: white;
-    border-left: 2px solid #666;
-    left: -4px; /* Adjusted left shift */
-    box-sizing: content-box;
-    padding-left: 12px; /* Adjusted padding to account for shift */
+/* Responsive adjustments for header/logo (from style.css) */
+@media (max-width: 768px) {
+    .header .logo,
+    .header .support-logo {
+        height: 35px; /* Adjust logo size */
+    }
+    /* Nav and breadcrumb spacing adjustments */
+    .header nav {
+        margin: 0 10px; /* Reduce margin around nav */
+    }
+     .breadcrumb li {
+        padding: 0 5px; /* Further reduce padding on smaller screens */
+        margin: 0 -3px; /* Further reduce negative margin */
+    }
+    .breadcrumb a {
+        padding: 0 5px; /* Further reduce padding */
+    }
+     .breadcrumb li:first-child {
+         padding-left: 8px; /* Adjust padding */
+         left: -3px; /* Adjusted left shift */
+    }
 }
 
-.breadcrumb li:first-child:hover {
-    background-color: lightsalmon;
+@media (max-width: 480px) {
+    .header .logo,
+    .header .support-logo {
+        height: 30px; /* Adjust logo size */
+    }
+    /* Nav and breadcrumb spacing adjustments */
+     .header nav {
+        margin: 0 5px; /* Further reduce margin around nav */
+    }
+    .breadcrumb li {
+        padding: 0 3px; /* Further reduce padding on smaller screens */
+        margin: 0 -2px; /* Further reduce negative margin */
+    }
+    .breadcrumb a {
+        padding: 0 3px; /* Further reduce padding */
+        font-size: 12px; /* Reduce font size */
+    }
+     .breadcrumb li:first-child {
+         padding-left: 6px; /* Adjust padding */
+         left: -2px; /* Adjusted left shift */
+    }
 }
+/* --- End Harmonized Header Styles --- */
 
-.logo {
-    height: 100%;
-}
 
+/* Removed conflicting rule from original detail.css */
+/* .logo { height: 100%; } */
+
+
+/* --- Existing detail.css content below --- */
 .content-wrap {
     flex: 1 0 auto;
     width: 100%;
@@ -147,6 +194,7 @@ body {
     margin: 20px auto;
     padding: 0 20px;
     padding-bottom: 50px;
+    /* Adjust padding-top if needed to clear the fixed header */
     padding-top: 30px;
 }
 
@@ -171,7 +219,7 @@ body {
     border: none;
 }
 
-
+/* Keep your footer styles */
 .footer {
     position: fixed;
     bottom: 0;
@@ -196,6 +244,7 @@ body {
     color: #4a5568;
 }
 
+/* Keep your footer media queries */
 @media (max-width: 768px) {
     .footer {
         height: 50px;
@@ -214,5 +263,4 @@ body {
     .footer-icon {
         font-size: 18px;
     }
-
 }
