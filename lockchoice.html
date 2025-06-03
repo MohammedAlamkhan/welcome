@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Choose Your Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+CU:wght@100..400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Default to Inter */
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px; /* Adjusted padding */
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            font-family: 'Playwrite CU', cursive; /* Specific font for heading */
+            color: #1a237e; 
+            margin-bottom: 25px; /* Adjusted margin */
+            font-size: 2.2rem; /* Adjusted font size */
+        }
+        .description {
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 30px;
+            font-size: 1.1rem; /* Slightly larger description */
+            color: #4a5568; /* Softer text color */
+        }
+        .button-link {
+            display: block;
+            background-color: #3949ab;
+            color: white;
+            padding: 14px 22px; /* Adjusted padding */
+            margin: 15px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1rem; /* Adjusted font size */
+            font-weight: 600; /* Bolder font */
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(50,50,93,0.1), 0 2px 5px rgba(0,0,0,0.08); /* More subtle shadow */
+        }
+        .button-link:hover {
+            background-color: #283593;
+            transform: translateY(-2px);
+        }
+        .button-link:active {
+            transform: translateY(1px);
+        }
+        .footer-text {
+            font-family: 'Inter', sans-serif;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Portal</h1>
+        <p class="description">Choose which lockscreen you'd like to set as your default. Your preference will be saved for future visits.</p>
+        <a href="#" id="setLockIndia" class="button-link">Welcome to India</a>
+        <a href="#" id="setLockMomentum" class="button-link">Welcome to Momentum Services</a>
+        <p class="footer-text">You can change this setting later.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listener for the "India Experience" button
+            document.getElementById('setLockIndia').addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                localStorage.setItem('preferredLockScreen', './lock.html'); // Save preference
+                window.location.href = './lock.html'; // Redirect
+            });
+
+            // Event listener for the "Momentum Services" button
+            document.getElementById('setLockMomentum').addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                localStorage.setItem('preferredLockScreen', './lock2.html'); // Save preference
+                window.location.href = './lock2.html'; // Redirect
+            });
+        });
+    </script></body>
+</html>

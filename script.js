@@ -90,7 +90,14 @@ function resetTimer() {
 
 function goToLockScreen() {
     // Redirect to the lock screen page
-    window.location.href = "/welcome/lock.html";
+    const preferredLockScreen = localStorage.getItem('preferredLockScreen');
+    if (preferredLockScreen) {
+        // If a preference exists, redirect to it.
+        // No delay, redirect immediately.
+        window.location.href = preferredLockScreen;
+    }else{
+        window.location.href = "/welcome/lock.html";
+    }
 }
 
 // Add event listeners to reset the timer on user activity
