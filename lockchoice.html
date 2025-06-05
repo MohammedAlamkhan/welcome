@@ -78,6 +78,7 @@
         <p class="description">Choose which lockscreen you'd like to set as your default. Your preference will be saved for future visits.</p>
         <a href="#" id="setLockIndia" class="button-link">Welcome to India</a>
         <a href="#" id="setLockMomentum" class="button-link">Welcome to Momentum Services</a>
+        <a href="#" id="setLockNewJoinee" class="button-link">Welcome for New Joinee</a>
         <p class="footer-text">You can change this setting later.</p>
     </div>
 
@@ -95,6 +96,13 @@
                 e.preventDefault(); // Prevent default link behavior
                 localStorage.setItem('preferredLockScreen', './lock2.html'); // Save preference
                 window.location.href = './lock2.html'; // Redirect
+            });
+
+
+            document.getElementById('setLockNewJoinee').addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                localStorage.setItem('preferredLockScreen', './lock3.html'); // Save preference
+                window.location.href = './lock3.html'; // Redirect
             });
         });
     </script></body>
