@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>People Gallery</title>
+  <style>
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px;
+      width: 200px;
+      display: inline-block;
+      text-align: center;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>People Gallery</h1>
+  <div id="gallery">Loading...</div>
+
+  <script>
+    fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTaXQgXOoKOMW5a0jB9LLICPts30NFI7HGHJTRgPQTwCvKCqzM_gB8CHmROzAok7XYtfzbCD8GBaobF/pubhtml')
+      .then(res => res.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const rows = Array.from(doc.querySelectorAll('table tbody tr')).slice(1); // Skip header row
+        const container = document.getElementById('gallery');
+        container.innerHTML = ''; // Clear "Loading..."
+
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 3) {
+            const name = cells[0].textContent.trim();
+            const imgTag = cells[1].querySelector('img');
+            const imgSrc = imgTag ? imgTag.src : '';
+            const details = cells[2].textContent.trim();
+
+            if (imgSrc) {
+              const card = document.createElement('div');
+              card.className = 'card';
+              card.innerHTML = `
+                <img src="${imgSrc}" alt="${name}" />
+                <h3>${name}</h3>
+                <p>${details}</p>
+              `;
+              container.appendChild(card);
+            }
+          }
+        });
+      })
+      .catch(err => {
+        document.getElementById('gallery').innerText = 'Failed to load data.';
+        console.error('Error fetching sheet:', err);
+      });
+  </script>
+</body>
+</html>

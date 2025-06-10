@@ -2,346 +2,354 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Guests</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>People Carousel</title>
     <style>
-        body,
-        html {
+        * {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            /* Prevents scrollbars on the standee */
-            font-family: 'Arial', sans-serif;
-            background-image: url(./asset/NewJoinerBg.jpg);
-            background-size: cover;
-            /* Light background for the page */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-sizing: border-box;
         }
 
-        .welcome-container {
-            width: 100vw;
-            /* Full viewport width */
-            height: 100vh;
-            /* Full viewport height */
+        body,
+        html {
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            color: #fff;
+            overflow-x: hidden;
+            /* Flat Design: Solid background */
+            background-color: white;
+            /* Dark solid background */
+        }
+
+        /* Header Styling */
+        header {
+            width: 100%;
+            height: 40vh;
+            background-image: url(asset/swirl.png);
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position-x: left;
+            top: -3vh;
+            left: -14vw;
+        }
+
+        .circle {
+            width: 15vh;
+            height: 15vh;
+            background-color: rgb(244 3 20);
+            border-radius: 50%;
+            position: absolute;
+            top: 1vh;
+            right: 10vh;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-            /* background-color: #ffffff; */
-            /* White background for the content area */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: calc(100vh - 240px);
         }
 
         h1 {
-            font-size: 3vw;
-            /* Responsive font size */
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 4vh;
+            font-weight: bolder;
+            text-align: center;
+            margin-bottom: 40px;
+            /* Flat Design: Solid text color, no gradients/shadows */
+            z-index: 99;
+            color: #000032;
+            letter-spacing: 2px;
+            position: absolute;
+            top: 20vh;
+            letter-spacing: 2px;
+            animation: fadeInDown 1s ease-out;
         }
 
-        .carousel-container {
-            width: 90%;
-            /* Adjust as needed */
-            max-width: 54vh;
-            /* For a 16:9 aspect ratio (9/16 * 100vh), then slightly less for padding */
-            height: 80vh;
-            /* Adjust as needed, main content area */
+        /* Carousel Container */
+        #carousel {
+            width: 400px;
+            text-align: center;
+            /* Flat Design: Solid, slightly transparent background, flatter shadow */
+
+            border-radius: 20px;
+            padding: 40px 30px;
+            position: absolute;
+            top: 33vh;
             overflow: hidden;
-            position: relative;
-            /* border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 80vh;
+            width: 100vw;
         }
 
-        .carousel-slide {
-            display: flex;
-            height: 100%;
-            transition: transform 0.7s ease-in-out;
+        #carousel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            /* Slightly enhanced hover shadow */
         }
 
-        .guest-item {
-            min-width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            box-sizing: border-box;
-            /* background-color: green; */
-            /* Light grey for individual slides */
+        /* New: Inner container for carousel content for smoother transitions */
+        .carousel-content {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
-        .guest-item:nth-child(odd) {
-            /* background-color: red; */
-            /* Slightly different for alternate slides */
+        .carousel-content.fade-out {
+            opacity: 0;
+            transform: translateY(20px);
         }
 
-        .guest-item img {
-            /* Responsive image size */
-            max-width: 30vh;
-            /* Max image width */
-            height: auto;
-            aspect-ratio: 1 / 1;
-            /* Square images */
-            object-fit: cover;
+
+        /* Image Styling */
+        .carousel-image {
+            width: 30vh;
+            height: 40vh;
             border-radius: 5%;
-            /* Circular images */
-            margin-bottom: 20px;
-            /* border: 5px solid #fff; */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            margin: 0 auto 20px;
+            object-fit: cover;
+            /* Flat Design: Solid border, no box-shadow */
+            border: 4px solid #6b7b8e;
+            /* Solid border color */
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            /* animation: imageSlideIn 0.8s ease-out; Removed as it's now handled by .carousel-content */
         }
 
-        .guest-item .guest-name {
-            font-size: 2.5vw;
-            /* Responsive font size */
-            font-weight: bold;
-            color: red;
-            margin-top: 10px;
+        .carousel-image:hover {
+            transform: scale(1.05);
+            border-color: #92a4b8;
+            /* Lighter border on hover */
         }
 
-        .dancing-script-welcome {
-  font-family: "Dancing Script", cursive;
-  font-optical-sizing: auto;
-  font-weight: bolder;
-  font-style: normal;
-  color: red;
-}
+        /* Text Styling */
+        .carousel-name {
+            font-size: 3vh;
+            font-weight: 600;
+            margin-bottom: 15px;
+            /* Flat Design: Solid text color */
+            color: rgb(0 0 50);
+            /* Light gray for name */
+            /* animation: textSlideIn 0.8s ease-out 0.2s both; Removed as it's now handled by .carousel-content */
+        }
+
+        .carousel-details {
+            font-size: 2vh;
+            line-height: 1.6;
+            /* Flat Design: Solid text color */
+            color: rgb(0 0 50);
+            /* Slightly darker light gray for details */
+            font-weight: 300;
+            /* animation: textSlideIn 0.8s ease-out 0.4s both; Removed as it's now handled by .carousel-content */
+        }
+
+        /* Loading State */
+        .loading {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        /* Error State */
+        .error {
+            color: #ff6b6b;
+            font-size: 1.1rem;
+        }
 
 
-.welcomeheading{
-    padding-top: 15vh;
-    margin-bottom: -7vh;
-}
-        /* Media query for a typical 16:9 vertical standee */
-        @media (orientation: portrait) and (min-aspect-ratio: 9/17) and (max-aspect-ratio: 9/15) {
-            h1 {
-                font-size: 5vh;
-                /* Adjust for vertical height */
-                margin-bottom: 3vh;
+        /* Footer Styling */
+        footer {
+            width: 100%;
+            height: 6vh;
+            position: relative;
+            background-image: url(./asset/footer.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position-y: bottom;
+            background-color: #0f102f;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
             }
 
-            .guest-item img {
-                width: 40vh;
-                /* Adjust image size based on viewport height */
-                height: 40vh;
-                /* Maintain aspect ratio if source images are square */
-                object-fit: cover;
-                border-radius: 5%;
-                margin-bottom: 3vh;
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.7;
             }
 
-            .guest-item .guest-name {
-                font-size: 4vh;
-                /* Adjust name size */
-            }
-
-            .carousel-container {
-                width: 100vw;
-                height: 75vh;
-                /* Adjust based on standee's usable screen height */
-                max-width: none;
-                /* Override max-width for portrait */
+            50% {
+                opacity: 1;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="welcome-container">
-        <h1 class="dancing-script-welcome welcomeheading">Welcome to Momentum Services</h1>
-        <div class="carousel-container">
-            <div class="carousel-slide">
-                <p style="padding: 20px; text-align: center;">Loading guest data...</p>
-            </div>
+
+    <header></header>
+
+    <main>
+        <div class="circle"></div>
+        <h1>Welcome to Momentum Services</h1>
+
+        <div id="carousel">
+            <div class="loading">Loading amazing people...</div>
         </div>
-    </div>
+
+    </main>
+
+    <footer></footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const carouselSlide = document.querySelector('.carousel-slide');
-            const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaXQgXOoKOMW5a0jB9LLICPts30NFI7HGHJTRgPQTwCvKCqzM_gB8CHmROzAok7XYtfzbCD8GBaobF/pub?output=csv';
-            const ROTATION_INTERVAL = 5000;
-            let currentGuestIndex = 0;
-            let guests = [];
+        let currentIndex = 0;
+        let people = [];
+        let intervalId = null;
+        let isTransitioning = false;
 
-            async function fetchGuestData() {
-                try {
-                    const response = await fetch(GOOGLE_SHEET_CSV_URL + '&timestamp=' + new Date().getTime());
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status} - Check Google Sheet URL and share settings.`);
-                    }
-                    const csvData = await response.text();
-                    guests = parseCSV(csvData);
-                    if (guests.length > 0) {
-                        createCarouselItems();
-                        startCarousel();
-                    } else {
-                        // This message appears if parseCSV returns an empty array AND no more specific error was set by parseCSV itself.
-                        const existingError = carouselSlide.querySelector('.parse-error-display');
-                        if (!existingError) {
-                            carouselSlide.innerHTML = '<p style="padding: 20px; text-align: center;">No guest data found or processed. Check Google Sheet content, headers (e.g., "Name", "Image_URL"), and data format.</p>';
+        function showPerson(index) {
+            if (isTransitioning || index < 0 || index >= people.length) return;
+
+            isTransitioning = true;
+            currentIndex = index;
+            const person = people[index];
+            const carousel = document.getElementById('carousel');
+            const currentContent = carousel.querySelector('.carousel-content');
+
+            // If there's existing content, fade it out first
+            if (currentContent) {
+                currentContent.classList.add('fade-out');
+                // Wait for fade-out transition to complete
+                setTimeout(() => {
+                    updateContent(carousel, person);
+                    currentContent.classList.remove('fade-out'); // Ensure it's removed for next time
+                }, 500); // Duration matches CSS transition
+            } else {
+                // If no content exists (first load), just update
+                updateContent(carousel, person);
+            }
+        }
+
+        function updateContent(carouselElement, personData) {
+            carouselElement.innerHTML = `
+    <div class="carousel-content">
+      <img src="${personData.image}" alt="${personData.name}" class="carousel-image" />
+      <h2 class="carousel-name">${personData.name}</h2>
+      <p class="carousel-details">${personData.details}</p>
+    </div>
+  `;
+            isTransitioning = false; // Reset transition flag after content is updated and new animation starts
+        }
+
+        function nextPerson() {
+            const nextIndex = (currentIndex + 1) % people.length;
+            showPerson(nextIndex);
+        }
+
+        function resetInterval() {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+            intervalId = setInterval(nextPerson, 4000);
+        }
+
+        // Enhanced error handling for image loading
+        function validateImageUrl(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
+        // Fetch and process data
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTaXQgXOoKOMW5a0jB9LLICPts30NFI7HGHJTRgPQTwCvKCqzM_gB8CHmROzAok7XYtfzbCD8GBaobF/pubhtml')
+            .then(res => res.text())
+            .then(async html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const rows = Array.from(doc.querySelectorAll('table tbody tr')).slice(1);
+
+                const tempPeople = [];
+
+                for (const row of rows) {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 3) {
+                        const name = cells[0].textContent.trim();
+                        const imgTag = cells[1].querySelector('img');
+                        const imgSrc = imgTag ? imgTag.src : '';
+                        const details = cells[2].textContent.trim();
+
+                        if (imgSrc && name && details) {
+                            // Validate image before adding
+                            const isValidImage = await validateImageUrl(imgSrc);
+                            if (isValidImage) {
+                                tempPeople.push({ name, image: imgSrc, details });
+                            }
                         }
-                        console.error("No guest data processed. Check CSV parsing or sheet content. Guests array is empty.");
-                    }
-                } catch (error) {
-                    console.error('Error fetching guest data:', error);
-                    carouselSlide.innerHTML = `<p style="padding: 20px; text-align: center;">Error loading guest data. Details: ${error.message}</p>`;
-                }
-            }
-
-            /**
-             * Basic CSV field value stripper for surrounding quotes.
-             * @param {string} fieldValue
-             * @returns {string}
-             */
-            function stripQuotes(fieldValue) {
-                if (typeof fieldValue === 'string') {
-                    if (fieldValue.startsWith('"') && fieldValue.endsWith('"')) {
-                        return fieldValue.substring(1, fieldValue.length - 1).replace(/""/g, '"'); // Also handle escaped double quotes "" -> "
                     }
                 }
-                return fieldValue;
-            }
 
-            function parseCSV(csvData) {
-                const lines = csvData.trim().split(/\r?\n/);
-                let parseErrorMsgOnPage = null; // To hold a more specific error message element
+                people = tempPeople;
 
-                function setParseError(message) {
-                    console.error(message);
-                    if (!parseErrorMsgOnPage) {
-                        carouselSlide.innerHTML = ''; // Clear previous content like "Loading..."
-                        parseErrorMsgOnPage = document.createElement('p');
-                        parseErrorMsgOnPage.className = 'parse-error-display'; // Add class for identification
-                        parseErrorMsgOnPage.style.cssText = "padding: 20px; text-align: left; color: red; font-size: 14px; white-space: pre-wrap;";
-                        carouselSlide.appendChild(parseErrorMsgOnPage);
+                if (people.length > 0) {
+                    showPerson(0);
+                    if (people.length > 1) {
+                        resetInterval();
                     }
-                    parseErrorMsgOnPage.innerHTML = `<strong>Parsing Error:</strong><br>${message.replace(/\. /g, '.<br>')}`;
+                } else {
+                    document.getElementById('carousel').innerHTML = '<div class="error">No valid data found. Please check the data source.</div>';
                 }
+            })
+            .catch(err => {
+                console.error('Error loading data:', err);
+                document.getElementById('carousel').innerHTML = '<div class="error">Failed to load data. Please try again later.</div>';
+            });
 
-                if (lines.length === 0) {
-                    setParseError("CSV data is completely empty.");
-                    return [];
-                }
-
-                const headersRaw = lines[0].trim().split(',');
-                // Strip quotes from headers as well, just in case
-                const headers = headersRaw.map(h => stripQuotes(h.trim()));
-                console.log("Detected CSV Headers (after stripping quotes):", headers);
-
-                const guestData = [];
-
-                nameIndex = headers.findIndex(header => header.toLowerCase() === 'name');
-                imageUrlIndex = headers.findIndex(header => header.toLowerCase() === 'image_url');
-                detailIndex = headers.findIndex(header => header.toLowerCase() === 'details');
-
-
-                console.log(`Name column index: ${nameIndex} (Header: ${nameIndex !== -1 ? headers[nameIndex] : 'Not Found'})`);
-                console.log(`Image URL column index: ${imageUrlIndex} (Header: ${imageUrlIndex !== -1 ? headers[imageUrlIndex] : 'Not Found'})`);
-
-                if (nameIndex === -1 || imageUrlIndex === -1) {
-                    let errorMessage = "Could not find required columns in CSV. ";
-                    errorMessage += `Expected name headers (case-insensitive) like: [${nameHeaderOptions.join(', ')}]. `;
-                    errorMessage += `Expected image URL headers (case-insensitive) like: [${imageHeaderOptions.join(', ')}]. `;
-                    errorMessage += `Actual headers found in your CSV (after potential quote stripping): [${headers.join(', ')}]. Please check your Google Sheet column headers.`;
-                    setParseError(errorMessage);
-                    return [];
-                }
-
-                if (lines.length <= 1 && headers.length > 0) {
-                    setParseError("CSV has headers but no data rows.");
-                    return [];
-                }
-
-
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-
-                    // This is a very basic CSV row parser. It won't correctly handle commas *within* quoted fields.
-                    // e.g. "Putin, Vladimir", "image_url" would be split into three parts.
-                    // For your provided data (Name,"Base64_URL"), it should be okay as the comma is the main delimiter.
-                    const valuesRaw = line.split(',');
-                    const values = valuesRaw.map(v => stripQuotes(v.trim())); // Apply quote stripping to each value
-
-                    if (values.length > Math.max(nameIndex, imageUrlIndex)) {
-                        const name = values[nameIndex]; // Already trimmed and quotes stripped
-                        const imageUrl = values[imageUrlIndex]; // Already trimmed and quotes stripped
-                        const details = values[detailIndex]; // Already trimmed and quotes stripped
-                        if (name && imageUrl) {
-                            guestData.push({ name, imageUrl, details });
-                            console.log(`Added guest: Name='${name}', ImageURL='${imageUrl.substring(0, 50)}...'`);
-                        } else {
-                            console.warn(`Skipping row ${i + 1} due to missing name or imageUrl after processing: Name='${name}', ImageURL='${imageUrl}'`);
-                        }
-                    } else {
-                        console.warn(`Skipping row ${i + 1} due to insufficient columns after split. Expected at least ${Math.max(nameIndex, imageUrlIndex) + 1} columns for line "${line}", got ${values.length} values: [${values.join(' | ')}]`);
-                    }
-                }
-                console.log("Processed guest data array:", guestData);
-                if (guestData.length === 0 && lines.length > 1 && !parseErrorMsgOnPage) { // If no specific error was already set
-                    setParseError("Headers were found, but no guest data rows could be successfully processed. Check data row format in the sheet or console warnings for skipped rows.");
-                }
-                return guestData;
+        // Pause carousel on hover
+        document.getElementById('carousel').addEventListener('mouseenter', () => {
+            if (intervalId) {
+                clearInterval(intervalId);
             }
+        });
 
-            function createCarouselItems() {
-                carouselSlide.innerHTML = ''; // Clear loading/error messages
-                guests.forEach(guest => {
-                    const item = document.createElement('div');
-                    item.classList.add('guest-item');
-                    item.innerHTML = `
-                        <img src="${guest.imageUrl}" alt="${guest.name}" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<p style=\\'color:red;font-size:1.5vh;\\'>Image load error for ${guest.name}</p>'); console.error('Image load error for ${guest.name}: ${guest.imageUrl.substring(0, 100)}...');">
-                        <div class="guest-name dancing-script-welcome">${guest.name}</div>
-                        <div class="guest-name dancing-script-welcome">${guest.details}</div>
-                    `;
-                    carouselSlide.appendChild(item);
-                });
-
-                if (guests.length === 0 && !carouselSlide.querySelector('.parse-error-display')) {
-                    carouselSlide.innerHTML = '<p style="padding: 20px; text-align: center;">No guests to display. Sheet might be empty or data not in expected format.</p>';
-                } else if (guests.length > 1) {
-                    const firstClone = carouselSlide.firstElementChild.cloneNode(true);
-                    carouselSlide.appendChild(firstClone);
-                }
+        document.getElementById('carousel').addEventListener('mouseleave', () => {
+            if (people.length > 1) {
+                resetInterval();
             }
+        });
 
-            function showNextGuest() {
-                if (guests.length <= 1) return;
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (isTransitioning) return;
 
-                currentGuestIndex++;
-                carouselSlide.style.transition = 'transform 0.7s ease-in-out';
-                carouselSlide.style.transform = `translateX(-${currentGuestIndex * 100}%)`;
-
-                if (currentGuestIndex === guests.length) {
-                    setTimeout(() => {
-                        carouselSlide.style.transition = 'none';
-                        currentGuestIndex = 0;
-                        carouselSlide.style.transform = `translateX(0%)`;
-                    }, 700);
-                }
+            if (e.key === 'ArrowLeft') {
+                const prevIndex = currentIndex === 0 ? people.length - 1 : currentIndex - 1;
+                showPerson(prevIndex);
+                resetInterval();
+            } else if (e.key === 'ArrowRight') {
+                nextPerson();
+                resetInterval();
             }
-
-            function startCarousel() {
-                if (guests.length > 1) {
-                    setInterval(showNextGuest, ROTATION_INTERVAL);
-                }
-            }
-
-            fetchGuestData();
         });
     </script>
 </body>
