@@ -77,13 +77,12 @@
         /* Carousel Container */
         #carousel {
             width: 30vh;
-            background-color: #6b7b8e;
             text-align: center;
             /* Flat Design: Solid, slightly transparent background, flatter shadow */
 
             border-radius: 16px;
             position: absolute;
-            top: 40vh;
+            top: 35vh;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 45vh;
@@ -273,9 +272,11 @@
         function updateContent(carouselElement, personData) {
             carouselElement.innerHTML = `
     <div class="carousel-content">
-      <img src="${personData.image}" alt="${personData.name}" class="carousel-image" />
+
       <h2 class="carousel-name">${personData.name}</h2>
+
       <p class="carousel-details">${personData.details}</p>
+      <img src="${personData.image}" alt="${personData.name}" class="carousel-image" />
     </div>
   `;
             isTransitioning = false; // Reset transition flag after content is updated and new animation starts
