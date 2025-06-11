@@ -299,7 +299,7 @@
                         const imgSrc = imgTag ? imgTag.src : '';
                         const details = cells[2].textContent.trim();
 
-                        if (imgSrc && name && details) {
+                        if (imgSrc && name) {
                             // Validate image before adding
                             const isValidImage = await validateImageUrl(imgSrc);
                             if (isValidImage) {
