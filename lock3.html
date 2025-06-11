@@ -69,25 +69,25 @@
             color: #000032;
             letter-spacing: 2px;
             position: absolute;
-            top: 25vh;
+            top: 24vh;
             letter-spacing: 2px;
             animation: fadeInDown 1s ease-out;
         }
 
         /* Carousel Container */
         #carousel {
-            width: 400px;
+            width: 30vh;
+            background-color: #6b7b8e;
             text-align: center;
             /* Flat Design: Solid, slightly transparent background, flatter shadow */
 
-            border-radius: 20px;
-            padding: 40px 30px;
+            border-radius: 16px;
             position: absolute;
-            top: 33vh;
+            top: 40vh;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 80vh;
-            width: 100vw;
+            height: 45vh;
+            z-index: 99;
         }
 
         #carousel:hover {
@@ -114,7 +114,6 @@
             width: 30vh;
             height: 40vh;
             border-radius: 5%;
-            margin: 0 auto 20px;
             object-fit: cover;
             /* Flat Design: Solid border, no box-shadow */
             border: 4px solid #6b7b8e;
@@ -174,6 +173,29 @@
             background-repeat: no-repeat;
             background-position-y: bottom;
             background-color: #0f102f;
+            z-index: 99;
+        }
+
+        .rotating-semicircle {
+            position: fixed;
+            bottom: -25vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60vh;
+            height: 60vh;
+            background-image: url("asset/mandala.png");
+            background-size: contain;
+            animation: rotateClockwise 40s linear infinite;
+            transform-origin: center;
+        }
+
+        @keyframes rotateClockwise {
+            from {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            to {
+                transform: translateX(-50%) rotate(360deg);
+            }
         }
 
         /* Animations */
@@ -218,7 +240,7 @@
     </main>
 
     <footer></footer>
-
+    <div class="rotating-semicircle"></div>
     <script>
         let currentIndex = 0;
         let people = [];
