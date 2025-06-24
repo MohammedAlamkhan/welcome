@@ -19,9 +19,12 @@
             z-index: 1000;
             transition: transform 0.3s ease-out;
             overflow: hidden;
+            display: flex; /* Added for centering error message */
+            align-items: center; /* Added for centering error message */
+            justify-content: center; /* Added for centering error message */
         }
 
-        #bgVideo {
+        #bgImage {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -30,6 +33,7 @@
             object-fit: cover;
             object-position: center;
             transform: translate(-50%, -50%);
+            transition: opacity 1s ease-in-out;
         }
 
         #darkOverlay {
@@ -106,23 +110,41 @@
                 transform: translateX(-50%) translateY(-10px);
             }
         }
+
+        .error-message {
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            z-index: 3; /* Ensure it's above overlay and image */
+            position: relative; /* Allows z-index to work */
+        }
     </style>
 </head>
 
 <body>
     <div id="lockscreen">
-        <!-- <video id="bgVideo" autoplay loop muted playsinline>
-            <source src="./asset/mumbai.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video> -->
-        <img id="bgVideo" src="./asset/momentum.png" alt="">
-        <!-- <div id="darkOverlay"></div>
-        <div id="overlayText">Welcome to Momentum Services</div> -->
+        <img id="bgImage" src="" alt="Background Image">
+        <!-- <div id="darkOverlay"></div> -->
+        <!-- <div id="overlayText">Welcome to Momentum Services</div> -->
         <div id="arrow">^</div>
+        <div id="lockscreenError" class="error-message" style="display: none;"></div>
     </div>
+    <div id="content">
+        <h1>Main Content Area</h1>
+        <p>This is where your actual website content would be.</p>
+        <p>Scroll down to see more.</p>
+        <p style="height: 1000px;">Placeholder for more content to make scrolling evident.</p>
+    </div>
+
     <script>
         let lastActivity = Date.now();
         let isLocked = true;
+        let images = [];
+        let currentImageIndex = 0;
+        let imageIntervalId = null;
+
+        // **IMPORTANT**: Replace with your actual Google Sheet pubhtml URL
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZz2GKK_l0P75ehQbz3a_anHD-Q9PFyX4Z58S0lPYTfVc8VZymg0-CIJjirFoXQIrm7ixF69yKzw11/pubhtml';
 
         function showLockscreen() {
             document.body.classList.remove('unlocked');
@@ -162,6 +184,157 @@
                 });
             }
         });
+
+        // Function to set the background image with fade effect and cache busting
+        function setBackgroundImage(imageUrl) {
+            const bgImage = document.getElementById('bgImage');
+            const cacheBustedUrl = imageUrl + '?t=' + new Date().getTime(); // Append timestamp for cache busting
+
+            bgImage.style.opacity = 0; // Start fade out
+            setTimeout(() => {
+                bgImage.src = cacheBustedUrl;
+                bgImage.onload = () => {
+                    bgImage.style.opacity = 1; // Fade in new image
+                    hideErrorMessage(); // Hide error if an image loads successfully
+                };
+                bgImage.onerror = () => {
+                    console.error("Failed to load image:", cacheBustedUrl);
+                    showErrorMessage("Failed to load background image.");
+                    bgImage.src = ''; // Clear source to prevent broken image icon
+                    bgImage.style.opacity = 0; // Ensure it's hidden
+                };
+            }, 1000); // Match CSS transition duration for a smooth fade
+        }
+
+        // Function to switch images
+        function switchImage() {
+            if (images.length > 0) {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                setBackgroundImage(images[currentImageIndex]);
+            } else {
+                // If somehow images array becomes empty during interval, stop and show error
+                if (imageIntervalId) {
+                    clearInterval(imageIntervalId);
+                    imageIntervalId = null;
+                }
+                showErrorMessage("No images available to display.");
+            }
+        }
+
+        // Function to display error message
+        function showErrorMessage(message) {
+            // document.getElementById('overlayText').style.display = 'none'; // Hide welcome text
+            document.getElementById('arrow').style.display = 'none'; // Hide arrow
+            document.getElementById('bgImage').style.display = 'none'; // Hide image
+            // document.getElementById('darkOverlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)'; // Darker overlay for visibility
+
+            const errorDiv = document.getElementById('lockscreenError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Function to hide error message
+        function hideErrorMessage() {
+            // document.getElementById('overlayText').style.display = 'block'; // Show welcome text
+            document.getElementById('arrow').style.display = 'block'; // Show arrow
+            document.getElementById('bgImage').style.display = 'block'; // Show image
+            // document.getElementById('darkOverlay').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Original overlay
+
+            const errorDiv = document.getElementById('lockscreenError');
+            errorDiv.textContent = '';
+            errorDiv.style.display = 'none';
+        }
+
+
+        // Fetch images from Google Sheet
+        async function fetchImages() {
+            if (imageIntervalId) { // Clear any existing interval before fetching new data
+                clearInterval(imageIntervalId);
+                imageIntervalId = null;
+            }
+            images = []; // Clear existing images
+
+            try {
+                // Add cache-control headers to the fetch request to discourage caching of the HTML data
+                const res = await fetch(GOOGLE_SHEET_URL, { cache: "no-store" });
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                const html = await res.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const rows = Array.from(doc.querySelectorAll('table tbody tr')).slice(1); // Skip header row
+
+                const tempImages = [];
+
+                for (const row of rows) {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 1) { // Assuming only one column for images
+                        // We need to be careful how images are embedded in Google Sheets.
+                        // If they are simply URLs in text, cells[0].textContent is enough.
+                        // If Google Sheets embeds them as <img> tags, then imgTag logic is needed.
+                        // Let's assume for maximum compatibility: try imgTag.src first, then textContent.
+                        let imgSrc = '';
+                        const imgTag = cells[0].querySelector('img');
+                        if (imgTag) {
+                            imgSrc = imgTag.src;
+                        } else {
+                            // Trim whitespace and check if it looks like a URL
+                            const textContent = cells[0].textContent.trim();
+                            if (textContent.startsWith('http://') || textContent.startsWith('https://')) {
+                                imgSrc = textContent;
+                            }
+                        }
+
+                        if (imgSrc) {
+                            // Validate image before adding
+                            const isValidImage = await validateImageUrl(imgSrc);
+                            if (isValidImage) {
+                                tempImages.push(imgSrc);
+                            } else {
+                                console.warn(`Invalid image URL found: ${imgSrc}`);
+                            }
+                        }
+                    }
+                }
+                images = tempImages;
+
+                if (images.length > 0) {
+                    hideErrorMessage(); // Hide any previous error
+                    setBackgroundImage(images[0]); // Set initial image
+                    if (images.length > 1) {
+                        currentImageIndex = 0; // Reset index for fresh start
+                        imageIntervalId = setInterval(switchImage, 5000); // Switch every 5 seconds if multiple images
+                    }
+                } else {
+                    showErrorMessage("No valid images found in the sheet.");
+                    document.getElementById('bgImage').src = ''; // Ensure no image is displayed
+                }
+
+            } catch (err) {
+                console.error('Error loading images from Google Sheet:', err);
+                showErrorMessage(`Failed to load images: ${err.message}. Please check sheet URL or network.`);
+                document.getElementById('bgImage').src = ''; // Ensure no image is displayed
+            }
+        }
+
+        // Enhanced error handling for image loading
+        function validateImageUrl(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
+        // Initialize fetching images when the script loads
+        fetchImages();
+
+        // Optional: Implement a refresh mechanism if you want the images to update
+        // without a full page reload. For example, refetch every 5 minutes.
+        // setInterval(fetchImages, 5 * 60 * 1000);
+
     </script>
 </body>
 
