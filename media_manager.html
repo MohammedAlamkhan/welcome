@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Manager</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #1c1e21;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border: 2px dashed #ccd0d5;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-label {
+            padding: 10px 20px;
+            background-color: #e7f3ff;
+            color: #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .file-label:hover {
+            background-color: #dcebff;
+        }
+
+        #uploadButton {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        #uploadButton:hover {
+            background-color: #0056b3;
+        }
+        
+        #fileName {
+            margin-left: 10px;
+            font-style: italic;
+            color: #606770;
+        }
+
+        /* Table Styles */
+        .media-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .media-table th, .media-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .media-table th {
+            background-color: #f4f6f8;
+            font-weight: 600;
+        }
+
+        .media-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .media-preview {
+            width: 100px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .delete-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .empty-gallery-message {
+            text-align: center;
+            padding: 40px;
+            color: #606770;
+        }
+
+        /* Lightbox (Modal) for Viewing */
+        #lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #lightbox-img,
+        #lightbox-video {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 4px;
+        }
+
+        #lightbox-caption {
+            margin-top: 15px;
+            color: #f1f1f1;
+            font-size: 1.1em;
+        }
+
+        .close {
+            position: absolute;
+            top: -20px;
+            right: 0;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close:hover {
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Media Manager</h1>
+
+        <div class="upload-section">
+            <input type="file" id="fileInput" multiple accept="image/*,video/*">
+            <label for="fileInput" class="file-label">Choose Files</label>
+            <button id="uploadButton">Upload</button>
+            <span id="fileName"></span>
+        </div>
+
+        <div id="gallery-container">
+            <!-- Media table will be injected here -->
+        </div>
+    </div>
+
+    <!-- Lightbox for viewing full-size media -->
+    <div id="lightbox">
+        <span class="close">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" style="display:none;">
+            <video id="lightbox-video" style="display:none;" controls></video>
+            <div id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const SERVER_URL = 'http://localhost:3001';
+
+        // --- DOM Element References ---
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const galleryContainer = document.getElementById('gallery-container');
+        const fileNameSpan = document.getElementById('fileName');
+        
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxVideo = document.getElementById('lightbox-video');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeBtn = document.querySelector('.close');
+
+        // --- Core Functions ---
+
+        const renderGallery = async () => {
+            try {
+                const response = await fetch(`${SERVER_URL}/media-files`);
+                if (!response.ok) throw new Error('Failed to fetch files.');
+                const files = await response.json();
+
+                galleryContainer.innerHTML = '';
+                if (files.length === 0) {
+                    galleryContainer.innerHTML = '<p class="empty-gallery-message">Your gallery is empty. Upload some photos or videos!</p>';
+                    return;
+                }
+
+                const table = document.createElement('table');
+                table.className = 'media-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Preview</th>
+                            <th>Filename</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                const tbody = table.querySelector('tbody');
+
+                files.forEach(filename => {
+                    const rowElement = createTableRow(filename);
+                    tbody.appendChild(rowElement);
+                });
+
+                galleryContainer.appendChild(table);
+
+            } catch (error) {
+                console.error('Error rendering gallery:', error);
+                galleryContainer.innerHTML = '<p class="empty-gallery-message">Error loading media. Is the server running?</p>';
+            }
+        };
+
+        const createTableRow = (filename) => {
+            const row = document.createElement('tr');
+
+            const fileExtension = filename.split('.').pop().toLowerCase();
+            const isImage = ['png', 'jpg', 'jpeg', 'gif'].includes(fileExtension);
+            const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
+
+            // Preview Cell
+            const previewCell = document.createElement('td');
+            let mediaElement;
+            if (isImage) {
+                mediaElement = document.createElement('img');
+            } else if (isVideo) {
+                mediaElement = document.createElement('video');
+                mediaElement.muted = true;
+            }
+            mediaElement.src = `${SERVER_URL}/media/${filename}`;
+            mediaElement.className = 'media-preview';
+            mediaElement.addEventListener('click', () => openLightbox(filename, isImage));
+            previewCell.appendChild(mediaElement);
+
+            // Filename Cell
+            const nameCell = document.createElement('td');
+            nameCell.textContent = filename;
+
+            // Action Cell
+            const actionCell = document.createElement('td');
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.title = 'Delete ' + filename;
+            deleteBtn.addEventListener('click', () => deleteMedia(filename));
+            actionCell.appendChild(deleteBtn);
+
+            row.appendChild(previewCell);
+            row.appendChild(nameCell);
+            row.appendChild(actionCell);
+
+            return row;
+        };
+
+        const deleteMedia = async (filename) => {
+            if (!confirm(`Are you sure you want to delete ${filename}?`)) {
+                return;
+            }
+            try {
+                const response = await fetch(`${SERVER_URL}/delete/${filename}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) throw new Error('Failed to delete file.');
+                renderGallery(); // Refresh the gallery
+            } catch (error) {
+                console.error('Error deleting file:', error);
+                alert('Could not delete the file. Please try again.');
+            }
+        };
+
+        const handleUpload = async () => {
+            const files = fileInput.files;
+            if (files.length === 0) {
+                alert('Please select one or more files to upload.');
+                return;
+            }
+
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append('files', file);
+            }
+
+            try {
+                const response = await fetch(`${SERVER_URL}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) throw new Error('Upload failed.');
+                
+                fileInput.value = ''; // Clear the input
+                updateFileNameDisplay();
+                renderGallery(); // Refresh the gallery
+            } catch (error) {
+                console.error('Error uploading files:', error);
+                alert('An error occurred during upload. Please try again.');
+            }
+        };
+        
+        const updateFileNameDisplay = () => {
+            const files = fileInput.files;
+            if (files.length === 1) {
+                fileNameSpan.textContent = files[0].name;
+            } else if (files.length > 1) {
+                fileNameSpan.textContent = `${files.length} files selected`;
+            } else {
+                fileNameSpan.textContent = '';
+            }
+        };
+
+        // --- Lightbox Functions ---
+
+        const openLightbox = (filename, isImage) => {
+            lightbox.style.display = 'flex';
+            lightboxCaption.textContent = filename;
+            const mediaUrl = `${SERVER_URL}/media/${filename}`;
+
+            if (isImage) {
+                lightboxImg.src = mediaUrl;
+                lightboxImg.style.display = 'block';
+                lightboxVideo.style.display = 'none';
+            } else {
+                lightboxVideo.src = mediaUrl;
+                lightboxVideo.style.display = 'block';
+                lightboxImg.style.display = 'none';
+                lightboxVideo.play();
+            }
+        };
+
+        const closeLightbox = () => {
+            lightbox.style.display = 'none';
+            lightboxVideo.pause();
+            lightboxVideo.src = '';
+            lightboxImg.src = '';
+        };
+
+        // --- Event Listeners ---
+        uploadButton.addEventListener('click', handleUpload);
+        fileInput.addEventListener('change', updateFileNameDisplay);
+        closeBtn.addEventListener('click', closeLightbox);
+        
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // --- Initial Load ---
+        renderGallery();
+    });
+    </script>
+</body>
+</html>

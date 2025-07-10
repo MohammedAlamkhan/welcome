@@ -112,14 +112,35 @@
 <body>
     <div id="lockscreen">
         <video id="bgVideo" autoplay loop muted playsinline>
-            <source src="./asset/mumbai.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            <!-- Video source will be set by JavaScript -->
         </video>
-        <div id="darkOverlay"></div>
-        <div id="overlayText">Welcome to India</div>
+        <!-- <div id="darkOverlay"></div>
+        <div id="overlayText">Welcome to India</div> -->
         <div id="arrow">^</div>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgVideo = document.getElementById('bgVideo');
+            const SERVER_URL = 'http://localhost:3001';
+            const storageKey = 'lock1_media';
+
+            const selectedMedia = JSON.parse(localStorage.getItem(storageKey));
+
+            if (selectedMedia && selectedMedia.length > 0) {
+                // Use the first selected video
+                const videoSource = document.createElement('source');
+                videoSource.src = `${SERVER_URL}/media/${selectedMedia[0]}`;
+                videoSource.type = 'video/mp4'; // Adjust type if needed for other formats
+                bgVideo.appendChild(videoSource);
+            } else {
+                // Fallback to a default video if none are selected
+                const defaultVideoSource = document.createElement('source');
+                defaultVideoSource.src = './asset/mumbai.mp4';
+                defaultVideoSource.type = 'video/mp4';
+                bgVideo.appendChild(defaultVideoSource);
+            }
+        });
+
         let lastActivity = Date.now();
         let isLocked = true;
 

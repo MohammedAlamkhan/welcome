@@ -244,7 +244,7 @@
         <h1>Welcome to <br>Momentum Services</h1>
 
         <div id="carousel">
-            <div class="loading">Loading amazing people...</div>
+            <div class="loading">Loading...</div>
         </div>
 
     </main>
@@ -252,137 +252,51 @@
     <footer></footer>
     <div class="rotating-semicircle"></div>
     <script>
-        let currentIndex = 0;
-        let people = [];
-        let intervalId = null;
-        let isTransitioning = false;
-
-        function showPerson(index) {
-            if (isTransitioning || index < 0 || index >= people.length) return;
-
-            isTransitioning = true;
-            currentIndex = index;
-            const person = people[index];
+        document.addEventListener('DOMContentLoaded', () => {
             const carousel = document.getElementById('carousel');
-            const currentContent = carousel.querySelector('.carousel-content');
+            const SERVER_URL = 'http://localhost:3001';
+            const storageKey = 'lock3_media';
+            let media = JSON.parse(localStorage.getItem(storageKey)) || [];
+            let currentIndex = 0;
 
-            // If there's existing content, fade it out first
-            if (currentContent) {
-                currentContent.classList.add('fade-out');
-                // Wait for fade-out transition to complete
-                setTimeout(() => {
-                    updateContent(carousel, person);
-                    currentContent.classList.remove('fade-out'); // Ensure it's removed for next time
-                }, 500); // Duration matches CSS transition
+            if (media.length === 0) {
+                // Fallback to a default image if none are selected
+                media.push({ 
+                    name: 'Welcome!', 
+                    details: 'We are excited to have you.', 
+                    image: './asset/NewJoinerBg.jpg' 
+                });
             } else {
-                // If no content exists (first load), just update
-                updateContent(carousel, person);
+                // Map the saved data to the expected structure
+                media = media.map(item => ({
+                    name: item.name,
+                    details: '', // You can customize this
+                    image: `${SERVER_URL}/media/${item.image}`
+                }));
             }
-        }
 
-        function updateContent(carouselElement, personData) {
-            carouselElement.innerHTML = `
-    <div class="carousel-content">
-
-      <h2 class="carousel-name custom-font">${personData.name}</h2>
-
-      <p class="carousel-details">${personData.details}</p>
-      <img src="${personData.image}" alt="${personData.name}" class="carousel-image" />
-    </div>
-  `;
-            isTransitioning = false; // Reset transition flag after content is updated and new animation starts
-        }
-
-        function nextPerson() {
-            const nextIndex = (currentIndex + 1) % people.length;
-            showPerson(nextIndex);
-        }
-
-        function resetInterval() {
-            if (intervalId) {
-                clearInterval(intervalId);
+            function showPerson(index) {
+                const person = media[index];
+                carousel.innerHTML = `
+                    <div class="carousel-content">
+                        <h2 class="carousel-name custom-font">${person.name}</h2>
+                        <p class="carousel-details">${person.details}</p>
+                        <img src="${person.image}" alt="${person.name}" class="carousel-image" />
+                    </div>
+                `;
             }
-            intervalId = setInterval(nextPerson, 4000);
-        }
 
-        // Enhanced error handling for image loading
-        function validateImageUrl(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
-
-        // Fetch and process data
-        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTaXQgXOoKOMW5a0jB9LLICPts30NFI7HGHJTRgPQTwCvKCqzM_gB8CHmROzAok7XYtfzbCD8GBaobF/pubhtml')
-            .then(res => res.text())
-            .then(async html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const rows = Array.from(doc.querySelectorAll('table tbody tr')).slice(1);
-
-                const tempPeople = [];
-
-                for (const row of rows) {
-                    const cells = row.querySelectorAll('td');
-                    if (cells.length >= 3) {
-                        const name = cells[0].textContent.trim();
-                        const imgTag = cells[1].querySelector('img');
-                        const imgSrc = imgTag ? imgTag.src : '';
-                        const details = cells[2].textContent.trim();
-
-                        if (imgSrc && name) {
-                            // Validate image before adding
-                            const isValidImage = await validateImageUrl(imgSrc);
-                            if (isValidImage) {
-                                tempPeople.push({ name, image: imgSrc, details });
-                            }
-                        }
-                    }
-                }
-
-                people = tempPeople;
-
-                if (people.length > 0) {
-                    showPerson(0);
-                    if (people.length > 1) {
-                        resetInterval();
-                    }
-                } else {
-                    document.getElementById('carousel').innerHTML = '<div class="error">No valid data found. Please check the data source.</div>';
-                }
-            })
-            .catch(err => {
-                console.error('Error loading data:', err);
-                document.getElementById('carousel').innerHTML = '<div class="error">Failed to load data. Please try again later.</div>';
-            });
-
-        // Pause carousel on hover
-        document.getElementById('carousel').addEventListener('mouseenter', () => {
-            if (intervalId) {
-                clearInterval(intervalId);
+            function nextPerson() {
+                currentIndex = (currentIndex + 1) % media.length;
+                showPerson(currentIndex);
             }
-        });
 
-        document.getElementById('carousel').addEventListener('mouseleave', () => {
-            if (people.length > 1) {
-                resetInterval();
-            }
-        });
+            // Initial display
+            showPerson(0);
 
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (isTransitioning) return;
-
-            if (e.key === 'ArrowLeft') {
-                const prevIndex = currentIndex === 0 ? people.length - 1 : currentIndex - 1;
-                showPerson(prevIndex);
-                resetInterval();
-            } else if (e.key === 'ArrowRight') {
-                nextPerson();
-                resetInterval();
+            // Start slideshow if there is more than one item
+            if (media.length > 1) {
+                setInterval(nextPerson, 4000);
             }
         });
     </script>
