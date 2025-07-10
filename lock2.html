@@ -133,15 +133,27 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const bgImage = document.getElementById('bgImage');
-            const SERVER_URL = 'http://localhost:3001';
-            const storageKey = 'lock2_media';
-            let images = JSON.parse(localStorage.getItem(storageKey)) || [];
-            let currentImageIndex = 0;
+            const SERVER_URL = window.location.origin;
+            const lockId = '2'; // Corresponds to lock2.html
+            let images = [];
+
+            try {
+                const response = await fetch(`${SERVER_URL}/load-lock-config/${lockId}`);
+                if (response.ok) {
+                    images = await response.json();
+                } else if (response.status === 404) {
+                    console.log('No configuration found for lock screen 2. Using default.');
+                } else {
+                    console.error('Failed to load configuration:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching configuration:', error);
+            }
 
             if (images.length === 0) {
-                // Fallback to a default image if none are selected
+                // Fallback to a default image if none are selected or loaded
                 images.push('asset/default_photo.jpg'); 
             }
 
@@ -154,6 +166,7 @@
                 }, 500); // Fade transition
             }
 
+            let currentImageIndex = 0;
             function switchImage() {
                 currentImageIndex = (currentImageIndex + 1) % images.length;
                 setBackgroundImage(images[currentImageIndex]);

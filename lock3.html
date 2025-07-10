@@ -252,31 +252,46 @@
     <footer></footer>
     <div class="rotating-semicircle"></div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const carousel = document.getElementById('carousel');
-            const SERVER_URL = 'http://localhost:3001';
-            const storageKey = 'lock3_media';
-            let media = JSON.parse(localStorage.getItem(storageKey)) || [];
+            const SERVER_URL = window.location.origin;
+            const lockId = '3'; // Corresponds to lock3.html
+            let media = [];
             let currentIndex = 0;
 
+            try {
+                const response = await fetch(`${SERVER_URL}/load-lock-config/${lockId}`);
+                if (response.ok) {
+                    const fetchedConfig = await response.json();
+                    // Map the fetched data to the expected structure
+                    media = fetchedConfig.map(item => ({
+                        name: item.name,
+                        details: 'Welcome to the team!', // You can customize this
+                        image: `${SERVER_URL}/media/${item.image}`
+                    }));
+                } else if (response.status === 404) {
+                    console.log('No configuration found for lock screen 3. Using default.');
+                } else {
+                    console.error('Failed to load configuration:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching configuration:', error);
+            }
+
             if (media.length === 0) {
-                // Fallback to a default image if none are selected
+                // Fallback to a default image if none are selected or loaded
                 media.push({ 
                     name: 'Welcome!', 
                     details: 'We are excited to have you.', 
-                    image: './asset/NewJoinerBg.jpg' 
+                    image: './asset/NewJoineeBg.jpg' 
                 });
-            } else {
-                // Map the saved data to the expected structure
-                media = media.map(item => ({
-                    name: item.name,
-                    details: '', // You can customize this
-                    image: `${SERVER_URL}/media/${item.image}`
-                }));
             }
+
+            console.log('Loaded media for lock3:', media);
 
             function showPerson(index) {
                 const person = media[index];
+                console.log('Displaying person:', person);
                 carousel.innerHTML = `
                     <div class="carousel-content">
                         <h2 class="carousel-name custom-font">${person.name}</h2>

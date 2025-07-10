@@ -16,6 +16,52 @@ if (!fs.existsSync(mediaDir)) {
 
 // Use CORS to allow communication from the HTML file
 app.use(cors());
+app.use(express.json()); // To parse JSON request bodies
+
+const configsDir = path.join(__dirname, 'configs');
+
+// Ensure the configs directory exists
+if (!fs.existsSync(configsDir)) {
+    fs.mkdirSync(configsDir);
+}
+
+// Route for saving lock screen configuration
+app.post('/save-lock-config', (req, res) => {
+    const { lockId, configData } = req.body;
+    if (!lockId || !configData) {
+        return res.status(400).json({ error: 'Missing lockId or configData' });
+    }
+    const configFilePath = path.join(configsDir, `${lockId}.json`);
+    fs.writeFile(configFilePath, JSON.stringify(configData, null, 2), (err) => {
+        if (err) {
+            console.error('Failed to save lock config:', err);
+            return res.status(500).json({ error: 'Failed to save configuration' });
+        }
+        res.json({ message: 'Configuration saved successfully' });
+    });
+});
+
+// Route for loading lock screen configuration
+app.get('/load-lock-config/:lockId', (req, res) => {
+    const lockId = req.params.lockId;
+    const configFilePath = path.join(configsDir, `${lockId}.json`);
+    fs.readFile(configFilePath, 'utf8', (err, data) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                return res.status(404).json({ error: 'Configuration not found' });
+            }
+            console.error('Failed to load lock config:', err);
+            return res.status(500).json({ error: 'Failed to load configuration' });
+        }
+        try {
+            const config = JSON.parse(data);
+            res.json(config);
+        } catch (parseErr) {
+            console.error('Failed to parse lock config:', parseErr);
+            res.status(500).json({ error: 'Failed to parse configuration' });
+        }
+    });
+});
 
 // Serve the static HTML file
 app.get('/', (req, res) => {
@@ -26,10 +72,11 @@ app.get('/media-manager', (req, res) => {
     res.sendFile(path.join(__dirname, 'media_manager.html'));
 });
 
-// Serve static files from the project root
-app.use(express.static(__dirname));
+// Serve static files from the 'media' directory first
+app.use('/media', express.static(mediaDir));
 
-// Serve static files from the 'media' directory
+// Serve static files from the project root (for all other assets)
+app.use(express.static(__dirname));
 app.use('/media', express.static(mediaDir));
 
 // Set up storage for Multer
@@ -84,6 +131,6 @@ app.delete('/delete/:filename', (req, res) => {
     });
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening at http://localhost:${port}`);
 });

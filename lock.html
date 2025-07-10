@@ -119,26 +119,39 @@
         <div id="arrow">^</div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const bgVideo = document.getElementById('bgVideo');
-            const SERVER_URL = 'http://localhost:3001';
-            const storageKey = 'lock1_media';
+            const SERVER_URL = window.location.origin;
+            const lockId = '1'; // Corresponds to lock.html
 
-            const selectedMedia = JSON.parse(localStorage.getItem(storageKey));
+            let selectedMedia = [];
+            try {
+                const response = await fetch(`${SERVER_URL}/load-lock-config/${lockId}`);
+                if (response.ok) {
+                    selectedMedia = await response.json();
+                } else if (response.status === 404) {
+                    console.log('No configuration found for lock screen 1. Using default.');
+                } else {
+                    console.error('Failed to load configuration:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching configuration:', error);
+            }
 
             if (selectedMedia && selectedMedia.length > 0) {
                 // Use the first selected video
                 const videoSource = document.createElement('source');
                 videoSource.src = `${SERVER_URL}/media/${selectedMedia[0]}`;
-                videoSource.type = 'video/mp4'; // Adjust type if needed for other formats
+                videoSource.type = 'video/mp4'; // Assuming mp4, adjust if needed
                 bgVideo.appendChild(videoSource);
             } else {
-                // Fallback to a default video if none are selected
+                // Fallback to a default video if none are selected or loaded
                 const defaultVideoSource = document.createElement('source');
                 defaultVideoSource.src = './asset/mumbai.mp4';
                 defaultVideoSource.type = 'video/mp4';
                 bgVideo.appendChild(defaultVideoSource);
             }
+            bgVideo.load(); // Load the video after setting source
         });
 
         let lastActivity = Date.now();

@@ -126,7 +126,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', async () => {
-        const SERVER_URL = 'http://localhost:3001';
+        const SERVER_URL = window.location.origin;
         const mediaSelectionContainer = document.getElementById('media-selection');
         const saveButton = document.getElementById('saveButton');
         const pageTitle = document.getElementById('page-title');
@@ -147,7 +147,20 @@
         const config = lockScreenConfig[lockId];
         pageTitle.textContent = `Configure: ${config.title}`;
 
-        const savedMedia = JSON.parse(localStorage.getItem(config.storageKey)) || [];
+        let savedConfig = [];
+        try {
+            const response = await fetch(`${SERVER_URL}/load-lock-config/${lockId}`);
+            if (response.ok) {
+                savedConfig = await response.json();
+            } else if (response.status === 404) {
+                console.log('No existing configuration found for this lock screen.');
+            } else {
+                throw new Error(`Failed to load configuration: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Error loading configuration:', error);
+            // Continue without pre-selected items if loading fails
+        }
 
         try {
             const response = await fetch(`${SERVER_URL}/media-files`);
@@ -156,7 +169,7 @@
 
             if (availableFiles.length > 0) {
                 availableFiles.forEach(filename => {
-                    const item = createMediaItem(filename);
+                    const item = createMediaItem(filename, savedConfig);
                     mediaSelectionContainer.appendChild(item);
                 });
             } else {
@@ -167,7 +180,7 @@
             mediaSelectionContainer.innerHTML = '<p>Could not load media files.</p>';
         }
 
-        function createMediaItem(filename) {
+        function createMediaItem(filename, currentConfig) {
             const isVideo = /\.(mp4|webm|ogg)$/i.test(filename);
             const itemDiv = document.createElement('div');
             itemDiv.className = 'media-item';
@@ -182,6 +195,8 @@
             itemDiv.appendChild(document.createElement('div')).className = 'checkmark';
 
             let nameInput;
+            let isSelected = false;
+
             if (lockId === '3') {
                 nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -189,19 +204,18 @@
                 nameInput.placeholder = "Guest's Name";
                 nameInput.addEventListener('click', (e) => e.stopPropagation()); // Prevent click from bubbling to the item
                 itemDiv.appendChild(nameInput);
-            }
 
-            // Check if this item was previously saved
-            if (lockId === '3') {
-                const savedItem = savedMedia.find(item => item.image === filename);
+                const savedItem = currentConfig.find(item => item.image === filename);
                 if (savedItem) {
-                    itemDiv.classList.add('selected');
-                    nameInput.value = savedItem.name;
+                    isSelected = true;
+                    nameInput.value = savedItem.name || '';
                 }
             } else {
-                if (savedMedia.includes(filename)) {
-                    itemDiv.classList.add('selected');
-                }
+                isSelected = currentConfig.includes(filename);
+            }
+
+            if (isSelected) {
+                itemDiv.classList.add('selected');
             }
 
             itemDiv.addEventListener('click', () => {
@@ -211,7 +225,7 @@
             return itemDiv;
         }
 
-        saveButton.addEventListener('click', () => {
+        saveButton.addEventListener('click', async () => {
             const selectedItems = [];
             const allItems = mediaSelectionContainer.querySelectorAll('.media-item.selected');
 
@@ -230,8 +244,23 @@
                 return;
             }
 
-            localStorage.setItem(config.storageKey, JSON.stringify(selectedItems));
-            window.location.href = config.dest;
+            try {
+                const response = await fetch(`${SERVER_URL}/save-lock-config`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ lockId: lockId, configData: selectedItems })
+                });
+
+                if (!response.ok) throw new Error('Failed to save configuration.');
+                
+                alert('Configuration saved successfully!');
+                window.location.href = config.dest;
+            } catch (error) {
+                console.error('Error saving configuration:', error);
+                alert('Failed to save configuration. Please try again.');
+            }
         });
     });
     </script>

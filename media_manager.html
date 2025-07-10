@@ -219,7 +219,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const SERVER_URL = 'http://localhost:3001';
+        
 
         // --- DOM Element References ---
         const fileInput = document.getElementById('fileInput');
@@ -237,7 +237,7 @@
 
         const renderGallery = async () => {
             try {
-                const response = await fetch(`${SERVER_URL}/media-files`);
+                const response = await fetch(`/media-files`);
                 if (!response.ok) throw new Error('Failed to fetch files.');
                 const files = await response.json();
 
@@ -291,7 +291,7 @@
                 mediaElement = document.createElement('video');
                 mediaElement.muted = true;
             }
-            mediaElement.src = `${SERVER_URL}/media/${filename}`;
+            mediaElement.src = `/media/${filename}`;
             mediaElement.className = 'media-preview';
             mediaElement.addEventListener('click', () => openLightbox(filename, isImage));
             previewCell.appendChild(mediaElement);
@@ -321,7 +321,7 @@
                 return;
             }
             try {
-                const response = await fetch(`${SERVER_URL}/delete/${filename}`, {
+                const response = await fetch(`/delete/${filename}`, {
                     method: 'DELETE'
                 });
                 if (!response.ok) throw new Error('Failed to delete file.');
@@ -345,7 +345,7 @@
             }
 
             try {
-                const response = await fetch(`${SERVER_URL}/upload`, {
+                const response = await fetch(`/upload`, {
                     method: 'POST',
                     body: formData
                 });
@@ -376,7 +376,7 @@
         const openLightbox = (filename, isImage) => {
             lightbox.style.display = 'flex';
             lightboxCaption.textContent = filename;
-            const mediaUrl = `${SERVER_URL}/media/${filename}`;
+            const mediaUrl = `/media/${filename}`;
 
             if (isImage) {
                 lightboxImg.src = mediaUrl;
