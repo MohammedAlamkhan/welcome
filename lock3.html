@@ -266,7 +266,7 @@
                     // Map the fetched data to the expected structure
                     media = fetchedConfig.map(item => ({
                         name: item.name,
-                        details: 'Welcome to the team!', // You can customize this
+                        details: '', // You can customize this
                         image: `${SERVER_URL}/media/${item.image}`
                     }));
                 } else if (response.status === 404) {

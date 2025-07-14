@@ -3,9 +3,10 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const https = require('https');
 
 const app = express();
-const port = 3001;
+const port = 8080;
 
 const mediaDir = path.join(__dirname, 'media');
 
@@ -131,6 +132,11 @@ app.delete('/delete/:filename', (req, res) => {
     });
 });
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server listening at http://localhost:${port}`);
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
+
+https.createServer(options, app).listen(port, '0.0.0.0', () => {
+    console.log(`Server listening at https://localhost:${port}`);
 });

@@ -96,7 +96,7 @@ function goToLockScreen() {
         // No delay, redirect immediately.
         window.location.href = preferredLockScreen;
     }else{
-        window.location.href = "/welcome/lock.html";
+        window.location.href = "/lock.html";
     }
 }
 
