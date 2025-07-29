@@ -4,9 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const https = require('https');
+const session = require('express-session');
 
 const app = express();
 const port = 8080;
+const PASSWORD = '';
 
 const mediaDir = path.join(__dirname, 'media');
 
@@ -19,6 +21,22 @@ if (!fs.existsSync(mediaDir)) {
 app.use(cors());
 app.use(express.json()); // To parse JSON request bodies
 
+app.use(session({
+    secret: '', // Replace with a real secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true } // Set to true if using HTTPS
+}));
+
+// Middleware to protect routes
+const requireAuth = (req, res, next) => {
+    if (req.session.authenticated) {
+        next();
+    } else {
+        res.redirect('/login.html');
+    }
+};
+
 const configsDir = path.join(__dirname, 'configs');
 
 // Ensure the configs directory exists
@@ -27,7 +45,7 @@ if (!fs.existsSync(configsDir)) {
 }
 
 // Route for saving lock screen configuration
-app.post('/save-lock-config', (req, res) => {
+app.post('/save-lock-config', requireAuth, (req, res) => {
     const { lockId, configData } = req.body;
     if (!lockId || !configData) {
         return res.status(400).json({ error: 'Missing lockId or configData' });
@@ -43,7 +61,7 @@ app.post('/save-lock-config', (req, res) => {
 });
 
 // Route for loading lock screen configuration
-app.get('/load-lock-config/:lockId', (req, res) => {
+app.get('/load-lock-config/:lockId', requireAuth, (req, res) => {
     const lockId = req.params.lockId;
     const configFilePath = path.join(configsDir, `${lockId}.json`);
     fs.readFile(configFilePath, 'utf8', (err, data) => {
@@ -69,8 +87,22 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/media-manager', (req, res) => {
+app.post('/login', (req, res) => {
+    const { password } = req.body;
+    if (password === PASSWORD) {
+        req.session.authenticated = true;
+        res.json({ message: 'Login successful' });
+    } else {
+        res.status(401).json({ error: 'Invalid password' });
+    }
+});
+
+app.get('/media-manager', requireAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'media_manager.html'));
+});
+
+app.get('/select-media', requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'select_media.html'));
 });
 
 // Serve static files from the 'media' directory first
@@ -95,7 +127,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Route for handling file uploads
-app.post('/upload', upload.array('files'), (req, res) => {
+app.post('/upload', requireAuth, upload.array('files'), (req, res) => {
     res.json({ message: 'Files uploaded successfully!' });
 });
 
@@ -115,7 +147,7 @@ app.get('/media-files', (req, res) => {
 });
 
 // Route for deleting a media file
-app.delete('/delete/:filename', (req, res) => {
+app.delete('/delete/:filename', requireAuth, (req, res) => {
     const filename = req.params.filename;
     const filePath = path.join(mediaDir, filename);
 
