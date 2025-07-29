@@ -256,7 +256,7 @@
 
         const renderGallery = async () => {
             try {
-                const response = await fetch(`/media-files`);
+                const response = await fetch(`/media-files-with-details`);
                 if (!response.ok) throw new Error('Failed to fetch files.');
                 const files = await response.json();
 
@@ -273,6 +273,8 @@
                         <tr>
                             <th>Preview</th>
                             <th>Filename</th>
+                            <th>Uploaded By</th>
+                            <th>Uploaded At</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -281,9 +283,11 @@
                 `;
                 const tbody = table.querySelector('tbody');
 
-                files.forEach(filename => {
-                    const rowElement = createTableRow(filename);
-                    tbody.appendChild(rowElement);
+                files.forEach(file => {
+                    const rowElement = createTableRow(file);
+                    if (rowElement) { // Only append if the row is valid
+                        tbody.appendChild(rowElement);
+                    }
                 });
 
                 galleryContainer.appendChild(table);
@@ -294,8 +298,9 @@
             }
         };
 
-        const createTableRow = (filename) => {
+        const createTableRow = (file) => {
             const row = document.createElement('tr');
+            const filename = file.filename;
 
             const fileExtension = filename.split('.').pop().toLowerCase();
             const isImage = ['png', 'jpg', 'jpeg', 'gif'].includes(fileExtension);
@@ -319,6 +324,14 @@
             const nameCell = document.createElement('td');
             nameCell.textContent = filename;
 
+            // Uploaded By Cell
+            const userCell = document.createElement('td');
+            userCell.textContent = file.user;
+
+            // Uploaded At Cell
+            const timeCell = document.createElement('td');
+            timeCell.textContent = new Date(file.timestamp).toLocaleString();
+
             // Action Cell
             const actionCell = document.createElement('td');
             const deleteBtn = document.createElement('button');
@@ -330,6 +343,8 @@
 
             row.appendChild(previewCell);
             row.appendChild(nameCell);
+            row.appendChild(userCell);
+            row.appendChild(timeCell);
             row.appendChild(actionCell);
 
             return row;

@@ -8,7 +8,6 @@ const session = require('express-session');
 
 const app = express();
 const port = 8080;
-const PASSWORD = '';
 
 const mediaDir = path.join(__dirname, 'media');
 
@@ -22,7 +21,7 @@ app.use(cors());
 app.use(express.json()); // To parse JSON request bodies
 
 app.use(session({
-    secret: '', // Replace with a real secret key
+    secret: 'your-secret-key', // Replace with a real secret key
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true } // Set to true if using HTTPS
@@ -88,12 +87,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    const { password } = req.body;
-    if (password === PASSWORD) {
+    const { username, password } = req.body;
+    const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
         req.session.authenticated = true;
+        req.session.username = username;
         res.json({ message: 'Login successful' });
     } else {
-        res.status(401).json({ error: 'Invalid password' });
+        res.status(401).json({ error: 'Invalid username or password' });
     }
 });
 
@@ -128,7 +131,25 @@ const upload = multer({ storage: storage });
 
 // Route for handling file uploads
 app.post('/upload', requireAuth, upload.array('files'), (req, res) => {
+    const username = req.session.username;
+    const uploads = JSON.parse(fs.readFileSync('uploads.json', 'utf8'));
+
+    req.files.forEach(file => {
+        uploads.push({
+            filename: file.filename,
+            user: username,
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    fs.writeFileSync('uploads.json', JSON.stringify(uploads, null, 2));
+
     res.json({ message: 'Files uploaded successfully!' });
+});
+
+app.get('/media-files-with-details', requireAuth, (req, res) => {
+    const uploads = JSON.parse(fs.readFileSync('uploads.json', 'utf8'));
+    res.json(uploads);
 });
 
 // Route for getting the list of media files
@@ -160,6 +181,11 @@ app.delete('/delete/:filename', requireAuth, (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Failed to delete file' });
         }
+
+        const uploads = JSON.parse(fs.readFileSync('uploads.json', 'utf8'));
+        const updatedUploads = uploads.filter(upload => upload.filename !== filename);
+        fs.writeFileSync('uploads.json', JSON.stringify(updatedUploads, null, 2));
+
         res.json({ message: 'File deleted successfully' });
     });
 });
